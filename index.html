@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>BeagleBone Black Demo</title>
+ 
+    <!-- jQuery and jQuery Mobile -->
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/high/highcharts.js"></script>
+    <script src="js/high/modules/exporting.js"></script>
+
+    <!-- Code for socket.io and device orientation handling -->
+    <script>
+        var socket = io.connect();
+        var datalog = [];
+        var all_data = [];
+        var chart;
+        var myVar = setInterval(function(){readDatafromB()},1000)
+        var series;
+        var latest_data;
+        var time_interval;
+        var current_time;
+        time_interval=1000;
+        current_time=-1000;
+        
+        
+           socket.on('1stsensorvalue', function (data) {
+                console.log(data);
+                $("#data1").val(data);
+                latest_data = data;
+                datalog.push({
+                            x: current_time,
+                            y: data
+                        });
+            });
+        
+        function readDatafromB(){
+            socket.emit('readData','true');
+        }
+        
+       $(function () {
+    $(document).ready(function() {
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+    
+        var chart;
+$('#container').highcharts({
+            chart: {
+                zoomType: 'x',
+                spacingRight: 20,
+                animation: Highcharts.svg, // don't animate in old IE
+                marginRight: 10,
+                events: {
+                    load: function() {
+    
+                        // set up the updating of the chart each second
+                        var series = this.series[0];
+                        setInterval(function() {
+                            current_time = current_time+1000, // current time
+                            series.addPoint([current_time, latest_data], true, true);
+                        }, 1000);
+                    }
+                }
+            },
+            title: {
+                text: 'Live random data'
+            },
+
+            xAxis: {
+                tickPixelInterval: 150
+            },
+            yAxis: {
+                title: {
+                    text: 'Voltage'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                formatter: function() {
+                        return '<b>'+ this.series.name +'</b><br/>'+
+                        Highcharts.numberFormat(this.y, 2); +', '+
+                        Highcharts.numberFormat(this.x, 2);
+                }
+            },
+            legend: {
+                enabled: true
+            },
+            exporting: {
+                enabled: true
+            },
+            series: [{
+                name: 'Random data',
+                data: (function() {
+                    // generate an array of random data
+                    var data = [],
+                        time = (new Date()).getTime(),
+                        i;
+    
+                    for (i = -50; i <= 0; i++) {
+                        data.push({
+                            x: current_time,
+                            y: latest_data
+                        });
+                    }
+                    console.log(data);
+                    return data;
+                })()
+            }]
+        });
+    });
+    
+});
+
+        
+    </script>
+</head>
+<body onload="readDatafromB();" >
+<!-- Home -->
+<div data-role="page" id="page1">
+    <div data-theme="a" data-role="header">
+        <h3>
+            Oghma Test
+        </h3>
+    </div>
+    <div data-role="content">
+        <div data-role="fieldcontain">
+            <label for="data1">
+                Data:
+            </label>
+            <input id="data1" type="input" name="data1" min="0" max="100"
+            data-highlight="false" data-theme="b">
+        </div>
+        <div data-role="fieldcontain">
+            <label for="datarate">
+                Data Rate:
+            </label>
+            <input id="datarate" type="input" name="datarate" value="0" min="0" max="100"
+            data-highlight="false" data-theme="b"><input type="button" name="on" id="data_rate" value="Change">
+        </div>
+        <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+    </div>
+</div>
+</body>
+</html>
