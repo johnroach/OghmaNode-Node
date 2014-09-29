@@ -8,7 +8,6 @@
     <title>BeagleBone Black Demo</title>
 
     <!-- jQuery and jQuery Mobile -->
-    <link rel="stylesheet" href="js/jquery.mobile-1.4.4.min.css" />
     <script src="js/jquery-2.1.1.min.js"></script>
     <script src="js/jquery.mobile-1.4.4.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
@@ -29,6 +28,7 @@
         var motion=true;
         time_interval=1000;
         current_time=-1000;
+        var status='stop';
 
 
         function show_hide_div()
@@ -47,6 +47,16 @@
                 $( "#container" ).show( 2000 );
                 $("#show_hide_button").val("Show Table");
                 motion=true;
+            }
+        }
+
+        function start_stop(){
+            if (status=='stop')
+            {
+                status='readData';
+            }else if(status =='readData')
+            {
+                status='stop'
             }
         }
 
@@ -179,6 +189,7 @@
              <input id="datarate" type="input" name="datarate" value="0" min="0" max="100"
              data-highlight="false" data-theme="b"><input type="button" id="data_rate" value="Change">
          </div>-->
+        <input type="button" id="start_stop_button" value="Start Data Collection" onclick="start_stop();">
         <input type="button" id="show_hide_button" value="Show Table" onclick="show_hide_div();">
         <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
         <div data-role="fieldcontain">
