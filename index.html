@@ -6,11 +6,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <title>BeagleBone Black Demo</title>
- 
+
     <!-- jQuery and jQuery Mobile -->
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
-    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+    <link rel="stylesheet" href="css/jquery.mobile-1.3.1.min.css" />
+    <script src="js/jquery-1.9.1.min.js"></script>
+    <script src="js/jquery.mobile-1.3.1.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/high/highcharts.js"></script>
     <script src="js/high/modules/exporting.js"></script>
@@ -26,105 +26,137 @@
         var latest_data;
         var time_interval;
         var current_time;
+        var motion=true;
         time_interval=1000;
         current_time=-1000;
-        
-        
-           socket.on('1stsensorvalue', function (data) {
-                console.log(data);
-                $("#data1").val(data);
-                latest_data = data;
-                datalog.push({
-                            x: current_time,
-                            y: data
-                        });
+
+
+        function show_hide_div()
+        {
+            if(motion)
+            {
+                event.preventDefault();
+                $( "#container" ).hide("slow");
+                $( "#data_table" ).show( 2000 );
+                $("#show_hide_button").val("Show Graph");
+                motion=false;
+            }else
+            {
+                event.preventDefault();
+                $( "#data_table" ).hide("slow");
+                $( "#container" ).show( 2000 );
+                $("#show_hide_button").val("Show Table");
+                motion=true;
+            }
+        }
+
+        socket.on('1stsensorvalue', function (data) {
+            console.log(data);
+            //$("#data1").val(data);
+            $("#data1").html("<b>"+data+"</b>  mBar");
+            latest_data = data;
+            datalog.push({
+                x: current_time,
+                y: data
             });
-        
+            if(current_time>=0)
+            {
+                var table = document.getElementById("data_table");
+                var row = table.insertRow(-1);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                cell1.innerHTML = current_time;
+                cell2.innerHTML = "<b>"+data+"</b>";
+            }
+
+        });
+
         function readDatafromB(){
             socket.emit('readData','true');
         }
-        
-       $(function () {
-    $(document).ready(function() {
-        Highcharts.setOptions({
-            global: {
-                useUTC: false
-            }
-        });
-    
-        var chart;
-$('#container').highcharts({
-            chart: {
-                zoomType: 'x',
-                spacingRight: 20,
-                animation: Highcharts.svg, // don't animate in old IE
-                marginRight: 10,
-                events: {
-                    load: function() {
-    
-                        // set up the updating of the chart each second
-                        var series = this.series[0];
-                        setInterval(function() {
-                            current_time = current_time+1000, // current time
-                            series.addPoint([current_time, latest_data], true, true);
-                        }, 1000);
-                    }
-                }
-            },
-            title: {
-                text: 'Live random data'
-            },
 
-            xAxis: {
-                tickPixelInterval: 150
-            },
-            yAxis: {
-                title: {
-                    text: 'Voltage'
-                },
-                plotLines: [{
-                    value: 0,
-                    width: 1,
-                    color: '#808080'
-                }]
-            },
-            tooltip: {
-                formatter: function() {
-                        return '<b>'+ this.series.name +'</b><br/>'+
-                        Highcharts.numberFormat(this.y, 2); +', '+
-                        Highcharts.numberFormat(this.x, 2);
-                }
-            },
-            legend: {
-                enabled: true
-            },
-            exporting: {
-                enabled: true
-            },
-            series: [{
-                name: 'Random data',
-                data: (function() {
-                    // generate an array of random data
-                    var data = [],
-                        time = (new Date()).getTime(),
-                        i;
-    
-                    for (i = -50; i <= 0; i++) {
-                        data.push({
-                            x: current_time,
-                            y: latest_data
-                        });
+        $(function () {
+            $(document).ready(function() {
+                $( "#data_table" ).hide();
+                Highcharts.setOptions({
+                    global: {
+                        useUTC: false
                     }
-                    console.log(data);
-                    return data;
-                })()
-            }]
-        });
-    });
-    
-});
+                });
 
-        
+                var chart;
+                $('#container').highcharts({
+                    chart: {
+                        zoomType: 'x',
+                        spacingRight: 20,
+                        animation: Highcharts.svg, // don't animate in old IE
+                        marginRight: 10,
+                        events: {
+                            load: function() {
+
+                                // set up the updating of the chart each second
+                                var series = this.series[0];
+                                setInterval(function() {
+                                    current_time = current_time+1000, // current time
+                                            series.addPoint([current_time, latest_data], true, true);
+                                }, 1000);
+                            }
+                        }
+                    },
+                    title: {
+                        text: 'Pressure Data'
+                    },
+
+                    xAxis: {
+                        tickPixelInterval: 150
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'mBar'
+                        },
+                        plotLines: [{
+                            value: 0,
+                            width: 1,
+                            color: '#808080'
+                        }]
+                    },
+                    tooltip: {
+                        formatter: function() {
+                            return '<b>'+ this.series.name +'</b><br/>'+
+                                    Highcharts.numberFormat(this.y, 2); +', '+
+                            Highcharts.numberFormat(this.x, 2);
+                        }
+                    },
+                    legend: {
+                        enabled: true
+                    },
+                    exporting: {
+                        enabled: true
+                    },
+                    series: [{
+                        name: 'Pressure Reading',
+                        data: (function() {
+                            // generate an array of random data
+                            var data = [],
+                                    time = (new Date()).getTime(),
+                                    i;
+
+                            for (i = -50; i <= 0; i++) {
+                                data.push({
+                                    x: current_time,
+                                    y: latest_data
+                                });
+                            }
+                            console.log(data);
+                            return data;
+                        })()
+                    }]
+                });
+            });
+
+        });
+
+
     </script>
 </head>
 <body onload="readDatafromB();" >
@@ -137,20 +169,26 @@ $('#container').highcharts({
     </div>
     <div data-role="content">
         <div data-role="fieldcontain">
-            <label for="data1">
-                Data:
-            </label>
-            <input id="data1" type="input" name="data1" min="0" max="100"
-            data-highlight="false" data-theme="b">
+
+            Data: <span id="data1" name="data1" data-theme="b"></span>
         </div>
-        <div data-role="fieldcontain">
-            <label for="datarate">
-                Data Rate:
-            </label>
-            <input id="datarate" type="input" name="datarate" value="0" min="0" max="100"
-            data-highlight="false" data-theme="b"><input type="button" name="on" id="data_rate" value="Change">
-        </div>
+        <!-- <div data-role="fieldcontain">
+             <label for="datarate">
+                 Data Rate:
+             </label>
+             <input id="datarate" type="input" name="datarate" value="0" min="0" max="100"
+             data-highlight="false" data-theme="b"><input type="button" id="data_rate" value="Change">
+         </div>-->
+        <input type="button" id="show_hide_button" value="Show Table" onclick="show_hide_div();">
         <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+        <div data-role="fieldcontain">
+            <table id="data_table" name="datarate" data-theme="b">
+                <tr>
+                    <th> Time </th>
+                    <th> Pressure </th>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>
 </body>
