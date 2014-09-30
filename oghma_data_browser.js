@@ -33,7 +33,7 @@ var app = require('http').createServer(function (request, response) {
             break;
     }
 
-    path.exists(filePath, function(exists) {
+    fs.exists(filePath, function(exists) {
 
         if (exists) {
             fs.readFile(filePath, function(error, content) {
@@ -67,32 +67,13 @@ io.set('browser client etag', true);  // apply etag caching logic based on versi
 
 console.log('Server running on: http://' + getIPAddress() + ':8090');
 
-
+var current_time=0
 
 io.sockets.on('connection', function (socket) {
-    socket.on('readData', function (data) {
-        console.log(data);
-        if (data == 'true'){
-
-            var temp = 0;
-
-      //      console.log(b.analogRead('P9_33') + '');
-        //    temp = parseFloat(b.analogRead('P9_33'));
-          //  var pressure = 0;
-      //      var analogVoltage = temp*1.8; // ADC Value converted to voltage
-      //      console.log('' + analogVoltage);
-//            pressure = (analogVoltage*3.2 -2.44)*1000/19.52;
-//            socket.emit('1stsensorvalue', pressure);
-//            socket.broadcast.emit('1stsensorvalue', pressure);
-        }
-
-
-
-    });
 
     socket.on('initialize',function(init_bool){
         //need to get list of sensors after stop (i.e. before a experiment starts)
-
+        console.log(init_bool);
         if (init_bool=='true')
         {
             var sensors='';
@@ -157,12 +138,20 @@ io.sockets.on('connection', function (socket) {
 
             socket.emit('sensors', sensors);
             //socket.broadcast.emit('sensors', sensors);
+        }else
+        {
+            console.log("user stopped init");
+        }
+    });
+
+    socket.on('start_data_collection',function(data_collection_bool,time_interval){
+        if(data_collection_bool=='true')
+        {
+
         }
     });
 
 });
-
-
 
 function printPressure(x) {
 
@@ -184,7 +173,7 @@ function printTemp(x) {
 
     temp = (analogVoltage*101.25) - 55;
 
-    return parseFloat(temp).toFixed(3) + "&deg; C";
+    return parseFloat(temp).toFixed(3) + " &deg;C";
 
 }
 

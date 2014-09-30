@@ -23,40 +23,26 @@
         var datalog = [];
         var all_data = [];
         var chart;
-        var myVar = setInterval(function(){readDatafromB()},1000)
+        var myVar = setInterval(function(){readDatafromB()},1000);
+
         var series;
         var latest_data;
         var time_interval;
         var current_time;
         var motion=true;
-        time_interval=1000;
+        time_interval=100;
         current_time=-1000;
         var status='stop';
-
-
-        function show_hide_div()
-        {
-            if(motion)
-            {
-                event.preventDefault();
-                $( "#container" ).hide("slow");
-                $( "#data_table" ).show( 2000 );
-                $("#show_hide_button").val("Show Graph");
-                motion=false;
-            }else
-            {
-                event.preventDefault();
-                $( "#data_table" ).hide("slow");
-                $( "#container" ).show( 2000 );
-                $("#show_hide_button").val("Show Table");
-                motion=true;
-            }
-        }
 
         function start_stop(){
             if (status=='stop')
             {
                 status='readData';
+                window.clearInterval(myVar);
+                socket.emit('initialize','false');
+                socket.emit('start_data_collection','true',time_interval);
+                $("#tabs").tabs("option", "active", 1);
+
             }else if(status =='readData')
             {
                 status='stop'
@@ -86,7 +72,6 @@
 
         socket.on('sensors',function(sensors)
         {//get list of sensors at stop
-            console.log(sensors);
             var current_sensor_array = sensors.split(',');
             var i;
 
@@ -107,6 +92,7 @@
                         {
                             $("#datasouce-1").show();
                             $("#sensorname1").html("Temperature Sensor");
+                            $("#sensor_value1").html(split_sensor_array[2]);
                         }else{
                             $("#datasouce-1").hide();
                             $("#sensorname1").html(" ");
@@ -125,6 +111,7 @@
                         {
                             $("#datasouce-2").show();
                             $("#sensorname2").html("Temperature Sensor");
+                            $("#sensor_value2").html(split_sensor_array[2]);
                         }else{
                             $("#datasouce-2").hide();
                             $("#sensorname2").html(" ");
@@ -143,6 +130,7 @@
                         {
                             $("#datasouce-3").show();
                             $("#sensorname3").html("Temperature Sensor");
+                            $("#sensor_value3").html(split_sensor_array[2]);
                         }else{
                             $("#datasouce-3").hide();
                             $("#sensorname3").html(" ");
@@ -156,7 +144,6 @@
         });
 
         function readDatafromB(){
-            //socket.emit('readData','true');
             socket.emit('initialize','true');
         }
 
@@ -170,6 +157,8 @@
                 $("#datasouce-3").hide();
                 $("#datasouce-4").hide();
 
+                $("#tabs").tabs();
+
                 Highcharts.setOptions({
                     global: {
                         useUTC: false
@@ -177,7 +166,7 @@
                 });
 
                 var chart;
-                /*            $('#container').highcharts({
+                $('#container').highcharts({
                     chart: {
                         zoomType: 'x',
                         spacingRight: 20,
@@ -189,9 +178,9 @@
                                 // set up the updating of the chart each second
                                 var series = this.series[0];
                                 setInterval(function() {
-                                    current_time = current_time+1000, // current time
+                                    current_time = current_time+100, // current time
                                             series.addPoint([current_time, latest_data], true, true);
-                                }, 1000);
+                                }, 100);
                             }
                         }
                     },
@@ -243,7 +232,7 @@
                             return data;
                         })()
                     }]
-                });*/
+                });
             });
 
         });
@@ -256,7 +245,7 @@
 <div data-role="page" id="page1">
     <div data-theme="a" data-role="header">
         <h3>
-            Oghma Test
+            Oghma Systems
         </h3>
     </div>
     <div data-role="content">
@@ -292,25 +281,25 @@
                 </ul>
             </div>
             <div id="one" class="ui-body-d ui-content">
-                <div id="datasouce-1" style="background-color: darkred;color: whitesmoke;height: 200px;padding: 5px;">
+                <div id="datasouce-1" style="background-color: darkred;color: whitesmoke;height: 150px;padding: 5px;">
                     PORT1 : <span id="sensorname1" name="sensorname1"></span><br/>
-                    <span id="sensor_value1" name="sensor_value1" style="font-size: large"></span>
+                    <span id="sensor_value1" name="sensor_value1" style="font-size: 100px"></span>
                 </div>
-                <div id="datasouce-2" style="background-color: darkslategray;color: whitesmoke;height: 200px; padding: 5px;">
+                <div id="datasouce-2" style="background-color: darkslategray;color: whitesmoke;height: 150px; padding: 5px;">
                     PORT2 : <span id="sensorname2" name="sensorname2"></span><br/>
-                    <span id="sensor_value2" name="sensor_value1" style="font-size: large"></span>
+                    <span id="sensor_value2" name="sensor_value1" style="font-size: 100px"></span>
                 </div>
-                <div id="datasouce-3" style="background-color: darkblue;color: whitesmoke;height: 200px;padding: 5px;">
+                <div id="datasouce-3" style="background-color: darkblue;color: whitesmoke;height: 150px;padding: 5px;">
                     PORT3 : <span id="sensorname3" name="sensorname3"></span><br/>
-                    <span id="sensor_value3" name="sensor_value1" style="font-size: large"></span>
+                    <span id="sensor_value3" name="sensor_value1" style="font-size: 100px"></span>
                 </div>
-                <div id="datasouce-4" style="background-color: darkmagenta;color: whitesmoke;height: 200px;padding: 5px;">
+                <div id="datasouce-4" style="background-color: darkmagenta;color: whitesmoke;height: 150px;padding: 5px;">
                     DIGI : <span id="diginame" name="diginame"></span><br/>
                     <span id="digi_value" name="digi_value" style="font-size: large"></span>
                 </div>
             </div>
             <div id="two">
-                <p>............Hullo....</p>
+                <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
             </div>
             <div id="three">
                <p>Hullo!</p>
