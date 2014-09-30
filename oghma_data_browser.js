@@ -72,12 +72,13 @@ console.log('Server running on: http://' + getIPAddress() + ':8090');
 var current_time=0;
 var time_interval=0;
 var timer = new NanoTimer();
+var full_dataset='';
 
 io.sockets.on('connection', function (socket) {
 
     socket.on('initialize',function(init_bool){
         //need to get list of sensors after stop (i.e. before a experiment starts)
-        console.log(init_bool);
+
         if (init_bool=='true')
         {
             var sensors='';
@@ -151,7 +152,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('start_data_collection',function(data_collection_bool,timer_interval){
         if(data_collection_bool=='true')
         {
-            time_interval=timer_interval;
+            time_interval=parseInt(timer_interval);
             timer.setInterval(savedata, '', timer_interval+'m');
             //@TODO Maybe we can later on add some sort of limit to data collection??
             //timer.setTimeout(liftOff, [timer], '10s');
@@ -163,25 +164,33 @@ io.sockets.on('connection', function (socket) {
         function savedata()
         {//creates a formatted string
 
+            var port1_sensor_data='';
+            var port2_sensor_data='';
+            var port3_sensor_data='';
+
+            var sensors_json='{"time":"'+current_time+'",';
+
             //here we check which sensors are connected
             //on port 1
-            var sensors='';
-
             var port1_value=parseFloat(b.analogRead('P9_39')).toFixed(2);
             var port1_analog_value=parseFloat(b.analogRead('P9_40')).toFixed(3);
             if(  (port1_value<=0.52) && (port1_value>=0.49) )
             {
                 //console.log("Pressure sensor connected on port 1");
-                sensors='port1:pressure:'+printPressure(port1_analog_value)+':'+current_time+','+sensors;
+                port1_sensor_data='"pressure:"'+printPressure(port1_analog_value)+'","P1":"pressure",';
+
             }else if((port1_value<=0.1) && (port1_value>=0.09))
             {
                 //console.log("Temp sensor connected on port 1");
-                sensors='port1:temp:'+printTemp(port1_analog_value)+':'+current_time+','+sensors;
+                port1_sensor_data='"temp":"'+printTemp(port1_analog_value)+'","P1":"temp",';
             }else
             {
                 //console.log("No sensors on port 1");
-                sensors='port1:null:'+current_time+','+sensors;
+                port1_sensor_data='"P1":"null",';
             }
+
+            sensors_json = sensors_json+port1_sensor_data;
+
 
             //here we check which sensors are connected
             //on port 2
@@ -191,16 +200,19 @@ io.sockets.on('connection', function (socket) {
             if(  (port2_value<=0.52) && (port2_value>=0.49) )
             {
                 //console.log("Pressure sensor connected on port 2");
-                sensors='port2:pressure:'+printPressure(port2_analog_value)+':'+current_time+','+sensors;
+                port2_sensor_data='"pressure":"'+printPressure(port2_analog_value)+'","P2":"pressure",';
             }else if((port2_value<=0.1) && (port2_value>=0.09))
             {
                 //console.log("Temp sensor connected on port 2");
-                sensors='port2:temp:'+printTemp(port2_analog_value)+':'+current_time+','+sensors;
+                port2_sensor_data='"temp":"'+printTemp(port2_analog_value)+'","P2":"temp",';
             }else
             {
                 //console.log("No sensors on port 2");
-                sensors='port2:null'+':'+current_time+','+sensors;
+                port2_sensor_data='"P2":"null",';
             }
+
+            sensors_json = sensors_json+port2_sensor_data;
+
 
             //here we check which sensors are connected
             //on port 3
@@ -210,21 +222,26 @@ io.sockets.on('connection', function (socket) {
             if( (port3_value<=0.52) && (port3_value>=0.49) )
             {
                 //console.log("Pressure sensor connected on port 3");
-                sensors='port3:pressure:'+printPressure(port3_analog_value)+':'+current_time+','+sensors;
+                port3_sensor_data='"pressure":"'+printPressure(port3_analog_value)+'","P3":"pressure",';
             }else if((port3_value<=0.1) && (port3_value>=0.09))
             {
                 //console.log("Temp sensor connected on port 3");
-                sensors='port3:temp:'+printTemp(port3_analog_value)+':'+current_time+','+sensors;
+                port3_sensor_data='"temp":"'+printTemp(port3_analog_value)+'","P3":"temp",';
             }else
             {
                 //console.log("No sensors on port 3");
-                sensors='port3:null'+':'+current_time+','+sensors;
+                port3_sensor_data='"P3":"null"';
             }
 
-            current_time=time_interval+current_time;
+            sensors_json = sensors_json+port3_sensor_data;
+
+            full_dataset = sensors_json + '},' + full_dataset ;
+
+            current_time=parseInt(time_interval)+parseInt(current_time);
 
             //console.log('collected_sensor_data, '+sensors);
-            socket.emit('collected_sensor_data',sensors);
+            var pick_me = full_dataset.substring(0, full_dataset.length - 1);
+            socket.emit('collected_sensor_data',('{"data":['+pick_me+']}'));
 
         }
 

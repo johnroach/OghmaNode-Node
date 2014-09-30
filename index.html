@@ -21,10 +21,11 @@
     <script>
         var socket = io.connect();
         var datalog = [];
-        var all_data = [];
+        var all_data ;
+        var data_index=0;
         var chart;
         var myVar = setInterval(function(){readDatafromB()},1000);
-
+        var obj ;
         var series;
         var latest_data;
         var time_interval;
@@ -39,13 +40,18 @@
             {
                 status='readData';
                 window.clearInterval(myVar);
+                data_index=0;
                 socket.emit('initialize','false');
+                time_interval=parseInt($('#datarate').val());
                 socket.emit('start_data_collection','true',time_interval);
                 $("#tabs").tabs("option", "active", 1);
 
             }else if(status =='readData')
             {
-                status='stop'
+                status='stop';
+                socket.emit('start_data_collection','false',time_interval);
+                socket.emit('initialize','true');
+                myVar = setInterval(function(){readDatafromB()},1000);
             }
         }
 
@@ -70,9 +76,18 @@
 
         });*/
 
+
         socket.on('collected_sensor_data',function(collected_data)
-        {
-            console.log(collected_data);
+        {//got sensor data... now use it damn it...
+         //data comes in the following format
+         //{"Time(ms)":"670","Temperature(C)":"17.353","P1":"temp","Pressure(mBr)":"69.906","P2":"pressure","P3":"null"}
+         //console.log(collected_data);
+            all_data=collected_data;
+            console.log(all_data);
+            obj = jQuery.parseJSON( all_data );
+            console.log(obj.data[0].time+'');
+
+
         });
 
         socket.on('sensors',function(sensors)
@@ -164,13 +179,13 @@
 
                 $("#tabs").tabs();
 
-                Highcharts.setOptions({
+                /*Highcharts.setOptions({
                     global: {
                         useUTC: false
                     }
-                });
+                });*/
 
-                var chart;
+                /*var chart;
                 $('#container').highcharts({
                     chart: {
                         zoomType: 'x',
@@ -237,7 +252,7 @@
                             return data;
                         })()
                     }]
-                });
+                });*/
             });
 
         });
@@ -255,27 +270,9 @@
     </div>
     <div data-role="content">
         <div data-role="fieldcontain">
-
-           <!-- Data: <span id="data1" name="data1" data-theme="b"></span>-->
-        </div>
-        <!-- <div data-role="fieldcontain">
-             <label for="datarate">
-                 Data Rate:
-             </label>
-             <input id="datarate" type="input" name="datarate" value="0" min="0" max="100"
-             data-highlight="false" data-theme="b"><input type="button" id="data_rate" value="Change">
-         </div>-->
+             <label for="datarate"><b>Data Time Interval(ms):</b></label><input id="datarate" type="text" name="datarate" value="10" min="10" max="100"/>
+         </div>
         <input type="button" id="start_stop_button" value="Start Data Collection" onclick="start_stop();">
-        <!--<input type="button" id="show_hide_button" value="Show Table" onclick="show_hide_div();">
-        <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-        <div data-role="fieldcontain">
-            <table id="data_table" name="datarate" data-theme="b">
-                <tr>
-                    <th> Time </th>
-                    <th> Pressure </th>
-                </tr>
-            </table>
-        </div>-->
 
         <div data-role="tabs" id="tabs">
             <div data-role="navbar">
@@ -304,7 +301,7 @@
                 </div>
             </div>
             <div id="two">
-                <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                <div id="container" style="min-width:100%; height: 400px; margin: 0 auto"></div>
             </div>
             <div id="three">
                <p>Hullo!</p>
