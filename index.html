@@ -30,7 +30,7 @@
         var time_interval;
         var current_time;
         var motion=true;
-        time_interval=100;
+        time_interval=10;
         current_time=-1000;
         var status='stop';
 
@@ -49,7 +49,7 @@
             }
         }
 
-        socket.on('1stsensorvalue', function (data) {
+        /*        socket.on('1stsensorvalue', function (data) {
             console.log(data);
             //$("#data1").val(data);
             $("#data1").html("<b>"+data+"</b>  mBar");
@@ -68,6 +68,11 @@
                 cell2.innerHTML = "<b>"+data+"</b>";
             }
 
+        });*/
+
+        socket.on('collected_sensor_data',function(collected_data)
+        {
+            console.log(collected_data);
         });
 
         socket.on('sensors',function(sensors)
@@ -87,12 +92,12 @@
                         {
                             $("#datasouce-1").show();
                             $("#sensorname1").html("Pressure Sensor");
-                            $("#sensor_value1").html(split_sensor_array[2]);
+                            $("#sensor_value1").html(split_sensor_array[2]+ " mBar");
                         }else if(split_sensor_array[1]=="temp")
                         {
                             $("#datasouce-1").show();
                             $("#sensorname1").html("Temperature Sensor");
-                            $("#sensor_value1").html(split_sensor_array[2]);
+                            $("#sensor_value1").html(split_sensor_array[2]+ " &deg;C");
                         }else{
                             $("#datasouce-1").hide();
                             $("#sensorname1").html(" ");
@@ -106,12 +111,12 @@
                         {
                             $("#datasouce-2").show();
                             $("#sensorname2").html("Pressure Sensor");
-                            $("#sensor_value2").html(split_sensor_array[2]);
+                            $("#sensor_value2").html(split_sensor_array[2]+ " mBar");
                         }else if(split_sensor_array[1]=="temp")
                         {
                             $("#datasouce-2").show();
                             $("#sensorname2").html("Temperature Sensor");
-                            $("#sensor_value2").html(split_sensor_array[2]);
+                            $("#sensor_value2").html(split_sensor_array[2]+ " &deg;C");
                         }else{
                             $("#datasouce-2").hide();
                             $("#sensorname2").html(" ");
@@ -125,12 +130,12 @@
                         {
                             $("#datasouce-3").show();
                             $("#sensorname3").html("Pressure Sensor");
-                            $("#sensor_value3").html(split_sensor_array[2]);
+                            $("#sensor_value3").html(split_sensor_array[2]+ " mBar");
                         }else if(split_sensor_array[1]=="temp")
                         {
                             $("#datasouce-3").show();
                             $("#sensorname3").html("Temperature Sensor");
-                            $("#sensor_value3").html(split_sensor_array[2]);
+                            $("#sensor_value3").html(split_sensor_array[2]+ " &deg;C");
                         }else{
                             $("#datasouce-3").hide();
                             $("#sensorname3").html(" ");
