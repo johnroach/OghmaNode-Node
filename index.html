@@ -100,11 +100,14 @@
                     {
                         if(split_sensor_array[1]=="pressure")
                         {
+                            $("#datasouce-1").show();
                             $("#sensorname1").html("Pressure Sensor");
                         }else if(split_sensor_array[1]=="temp")
                         {
+                            $("#datasouce-1").show();
                             $("#sensorname1").html("Temperature Sensor");
                         }else{
+                            $("#datasouce-1").hide();
                             $("#sensorname1").html(" ");
                         }
                     }
@@ -114,12 +117,32 @@
                     {
                         if(split_sensor_array[1]=="pressure")
                         {
+                            $("#datasouce-2").show();
                             $("#sensorname2").html("Pressure Sensor");
                         }else if(split_sensor_array[1]=="temp")
                         {
+                            $("#datasouce-2").show();
                             $("#sensorname2").html("Temperature Sensor");
                         }else{
+                            $("#datasouce-2").hide();
                             $("#sensorname2").html(" ");
+                        }
+                    }
+
+                    //checking PORT3
+                    if (split_sensor_array[0]=="port3")
+                    {
+                        if(split_sensor_array[1]=="pressure")
+                        {
+                            $("#datasouce-3").show();
+                            $("#sensorname3").html("Pressure Sensor");
+                        }else if(split_sensor_array[1]=="temp")
+                        {
+                            $("#datasouce-3").show();
+                            $("#sensorname3").html("Temperature Sensor");
+                        }else{
+                            $("#datasouce-3").hide();
+                            $("#sensorname3").html(" ");
                         }
                     }
 
@@ -136,7 +159,13 @@
 
         $(function () {
             $(document).ready(function() {
-                $( "#data_table" ).hide();
+
+                //hiding unused elements at first
+                $("#data_table").hide();
+                $("#datasouce-1").hide();
+                $("#datasouce-2").hide();
+                $("#datasouce-3").hide();
+                $("#datasouce-4").hide();
 
                 Highcharts.setOptions({
                     global: {
@@ -230,7 +259,7 @@
     <div data-role="content">
         <div data-role="fieldcontain">
 
-            Data: <span id="data1" name="data1" data-theme="b"></span>
+           <!-- Data: <span id="data1" name="data1" data-theme="b"></span>-->
         </div>
         <!-- <div data-role="fieldcontain">
              <label for="datarate">
@@ -260,10 +289,10 @@
                 </ul>
             </div>
             <div id="one" class="ui-body-d ui-content">
-                <div id="datasouce-1" style="background-color: darkred;color: whitesmoke;height: 200px;">PORT1 : <span id="sensorname1" name="sensorname1"></span><br/> </div>
-                <div id="datasouce-2" style="background-color: darkslategray;color: whitesmoke;height: 200px;">PORT2 : <span id="sensorname2" name="sensorname2"></span><br/> </div>
-                <div id="datasouce-3" style="background-color: darkblue;color: whitesmoke;height: 200px;">PORT3 : <span id="sensorname3" name="sensorname3"></span><br/> </div>
-                <div id="datasouce-4" style="background-color: darkmagenta;color: whitesmoke;height: 200px;">DIGI : <span id="diginame" name="diginame"></span><br/> </div>
+                <div id="datasouce-1" style="background-color: darkred;color: whitesmoke;height: 200px;padding: 5px;">PORT1 : <span id="sensorname1" name="sensorname1"></span><br/> </div>
+                <div id="datasouce-2" style="background-color: darkslategray;color: whitesmoke;height: 200px; padding: 5px;">PORT2 : <span id="sensorname2" name="sensorname2"></span><br/> </div>
+                <div id="datasouce-3" style="background-color: darkblue;color: whitesmoke;height: 200px;padding: 5px;">PORT3 : <span id="sensorname3" name="sensorname3"></span><br/> </div>
+                <div id="datasouce-4" style="background-color: darkmagenta;color: whitesmoke;height: 200px;padding: 5px;">DIGI : <span id="diginame" name="diginame"></span><br/> </div>
             </div>
             <div id="two">
                 <ul data-role="listview" data-inset="true">
