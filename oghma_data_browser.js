@@ -76,38 +76,6 @@ io.sockets.on('connection', function (socket) {
 
             var temp = 0;
 
-
-            //here we check which sensors are connected
-            //on port 1
-            if( (parseFloat(b.analogRead('P9_39')).toFixed(2)==0.51) )
-            {
-                console.log("Pressure sensor connected on port 1");
-            }else if((parseFloat(b.analogRead('P9_39')).toFixed(2)==0.09))
-            {
-                console.log("Temp sensor connected on port 1");
-            }
-
-            //here we check which sensors are connected
-            //on port 2
-            if( (parseFloat(b.analogRead('P9_37')).toFixed(2)==0.51) )
-            {
-                console.log("Pressure sensor connected on port 2");
-            }else if((parseFloat(b.analogRead('P9_37')).toFixed(2)==0.09))
-            {
-                console.log("Temp sensor connected on port 2");
-            }
-
-            //here we check which sensors are connected
-            //on port 3
-            if( (parseFloat(b.analogRead('P9_35')).toFixed(2)==0.51) )
-            {
-                console.log("Pressure sensor connected on port 3");
-            }else if((parseFloat(b.analogRead('P9_35')).toFixed(2)==0.09))
-            {
-                console.log("Temp sensor connected on port 3");
-            }
-
-
 //            console.log(b.analogRead('P9_33') + '');
 //            temp = parseFloat(b.analogRead('P9_33'));
 //            var pressure = 0;
@@ -117,7 +85,70 @@ io.sockets.on('connection', function (socket) {
 //            socket.emit('1stsensorvalue', pressure);
 //            socket.broadcast.emit('1stsensorvalue', pressure);
         }
+
+
+
     });
+
+    socket.on('initialize',function(init_bool){
+        //need to get list of sensors after stop (i.e. before a experiment starts)
+
+        if (init_bool=='true')
+        {
+            var sensors='';
+            //here we check which sensors are connected
+            //on port 1
+            if( (parseFloat(b.analogRead('P9_39')).toFixed(2)==0.51) )
+            {
+                console.log("Pressure sensor connected on port 1");
+                sensors='port1:pressure,'+sensors;
+            }else if((parseFloat(b.analogRead('P9_39')).toFixed(2)==0.09))
+            {
+                console.log("Temp sensor connected on port 1");
+                sensors='port1:temp,'+sensors;
+            }else
+            {
+                console.log("No sensors on port 1");
+                sensors='port1:null,'+sensors;
+            }
+
+            //here we check which sensors are connected
+            //on port 2
+            if( (parseFloat(b.analogRead('P9_37')).toFixed(2)==0.51) )
+            {
+                console.log("Pressure sensor connected on port 2");
+                sensors='port2:pressure,'+sensors;
+            }else if((parseFloat(b.analogRead('P9_37')).toFixed(2)==0.09))
+            {
+                console.log("Temp sensor connected on port 2");
+                sensors='port2:temp,'+sensors;
+            }else
+            {
+                console.log("No sensors on port 2");
+                sensors='port2:null,'+sensors;
+            }
+
+            //here we check which sensors are connected
+            //on port 3
+            if( (parseFloat(b.analogRead('P9_35')).toFixed(2)==0.51) )
+            {
+                console.log("Pressure sensor connected on port 3");
+                sensors='port3:pressure,'+sensors;
+            }else if((parseFloat(b.analogRead('P9_35')).toFixed(2)==0.09))
+            {
+                console.log("Temp sensor connected on port 3");
+                sensors='port3:temp,'+sensors;
+            }else
+            {
+                console.log("No sensors on port 3");
+                sensors='port3:null,'+sensors;
+            }
+
+            socket.emit('sensors', sensors);
+            socket.broadcast.emit('sensors', sensors);
+        }
+    });
+
 });
 
 

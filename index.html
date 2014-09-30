@@ -5,7 +5,7 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <title>BeagleBone Black Demo</title>
+    <title>Oghma Node Demo</title>
 
     <!-- jQuery and jQuery Mobile -->
     <script src="js/jquery-2.1.1.min.js"></script>
@@ -13,6 +13,9 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/high/highcharts.js"></script>
     <script src="js/high/modules/exporting.js"></script>
+
+    <!-- css file for mobile devices -->
+    <LINK href="js/jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css">
 
     <!-- Code for socket.io and device orientation handling -->
     <script>
@@ -81,13 +84,60 @@
 
         });
 
+        socket.on('sensors',function(sensors)
+        {//get list of sensors at stop
+            console.log(sensors);
+            var current_sensor_array = sensors.split(',');
+            var i;
+
+            for (i = 0; i < current_sensor_array.length; i++) {
+                if (current_sensor_array[i]!='')
+                {
+                    var split_sensor_array = current_sensor_array[i].split(':');
+
+                    //checking PORT1
+                    if (split_sensor_array[0]=="port1")
+                    {
+                        if(split_sensor_array[1]=="pressure")
+                        {
+                            $("#sensorname1").html("Pressure Sensor");
+                        }else if(split_sensor_array[1]=="temp")
+                        {
+                            $("#sensorname1").html("Temperature Sensor");
+                        }else{
+                            $("#sensorname1").html(" ");
+                        }
+                    }
+
+                    //checking PORT2
+                    if (split_sensor_array[0]=="port2")
+                    {
+                        if(split_sensor_array[1]=="pressure")
+                        {
+                            $("#sensorname2").html("Pressure Sensor");
+                        }else if(split_sensor_array[1]=="temp")
+                        {
+                            $("#sensorname2").html("Temperature Sensor");
+                        }else{
+                            $("#sensorname2").html(" ");
+                        }
+                    }
+
+                }
+
+            }
+
+        });
+
         function readDatafromB(){
-            socket.emit('readData','true');
+            //socket.emit('readData','true');
+            socket.emit('initialize','true');
         }
 
         $(function () {
             $(document).ready(function() {
                 $( "#data_table" ).hide();
+
                 Highcharts.setOptions({
                     global: {
                         useUTC: false
@@ -95,7 +145,7 @@
                 });
 
                 var chart;
-                $('#container').highcharts({
+                /*            $('#container').highcharts({
                     chart: {
                         zoomType: 'x',
                         spacingRight: 20,
@@ -161,7 +211,7 @@
                             return data;
                         })()
                     }]
-                });
+                });*/
             });
 
         });
@@ -190,7 +240,7 @@
              data-highlight="false" data-theme="b"><input type="button" id="data_rate" value="Change">
          </div>-->
         <input type="button" id="start_stop_button" value="Start Data Collection" onclick="start_stop();">
-        <input type="button" id="show_hide_button" value="Show Table" onclick="show_hide_div();">
+        <!--<input type="button" id="show_hide_button" value="Show Table" onclick="show_hide_div();">
         <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
         <div data-role="fieldcontain">
             <table id="data_table" name="datarate" data-theme="b">
@@ -199,7 +249,36 @@
                     <th> Pressure </th>
                 </tr>
             </table>
+        </div>-->
+
+        <div data-role="tabs" id="tabs">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#one" data-ajax="false">Reading</a></li>
+                    <li><a href="#two" data-ajax="false">Graphics</a></li>
+                    <li><a href="#three" data-ajax="false">Table</a></li>
+                </ul>
+            </div>
+            <div id="one" class="ui-body-d ui-content">
+                <div id="datasouce-1" style="background-color: darkred;color: whitesmoke;height: 200px;">PORT1 : <span id="sensorname1" name="sensorname1"></span><br/> </div>
+                <div id="datasouce-2" style="background-color: darkslategray;color: whitesmoke;height: 200px;">PORT2 : <span id="sensorname2" name="sensorname2"></span><br/> </div>
+                <div id="datasouce-3" style="background-color: darkblue;color: whitesmoke;height: 200px;">PORT3 : <span id="sensorname3" name="sensorname3"></span><br/> </div>
+                <div id="datasouce-4" style="background-color: darkmagenta;color: whitesmoke;height: 200px;">DIGI : <span id="diginame" name="diginame"></span><br/> </div>
+            </div>
+            <div id="two">
+                <ul data-role="listview" data-inset="true">
+                    <li><a href="#">Acura</a></li>
+                    <li><a href="#">Audi</a></li>
+                    <li><a href="#">BMW</a></li>
+                    <li><a href="#">Cadillac</a></li>
+                    <li><a href="#">Ferrari</a></li>
+                </ul>
+            </div>
+            <div id="three">
+               <p>Hullo!</p>
+            </div>
         </div>
+
     </div>
 </div>
 </body>
