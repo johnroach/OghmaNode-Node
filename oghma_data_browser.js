@@ -76,11 +76,11 @@ io.sockets.on('connection', function (socket) {
 
             var temp = 0;
 
-//            console.log(b.analogRead('P9_33') + '');
-//            temp = parseFloat(b.analogRead('P9_33'));
-//            var pressure = 0;
-//            var analogVoltage = temp*1.8; // ADC Value converted to voltage
-//            console.log('' + analogVoltage);
+      //      console.log(b.analogRead('P9_33') + '');
+        //    temp = parseFloat(b.analogRead('P9_33'));
+          //  var pressure = 0;
+      //      var analogVoltage = temp*1.8; // ADC Value converted to voltage
+      //      console.log('' + analogVoltage);
 //            pressure = (analogVoltage*3.2 -2.44)*1000/19.52;
 //            socket.emit('1stsensorvalue', pressure);
 //            socket.broadcast.emit('1stsensorvalue', pressure);
@@ -96,79 +96,95 @@ io.sockets.on('connection', function (socket) {
         if (init_bool=='true')
         {
             var sensors='';
+
+
             //here we check which sensors are connected
             //on port 1
+
             var port1_value=parseFloat(b.analogRead('P9_39')).toFixed(2);
+            var port1_analog_value=parseFloat(b.analogRead('P9_40')).toFixed(3);
             if(  (port1_value<=0.52) && (port1_value>=0.49) )
             {
-                console.log("Pressure sensor connected on port 1");
-
-                sensors='port1:pressure,'+sensors;
+                //console.log("Pressure sensor connected on port 1");
+                sensors='port1:pressure:'+printPressure(port1_analog_value)+','+sensors;
             }else if((port1_value<=0.1) && (port1_value>=0.09))
             {
-                console.log("Temp sensor connected on port 1");
-                sensors='port1:temp,'+sensors;
+                //console.log("Temp sensor connected on port 1");
+                sensors='port1:temp:'+printTemp(port1_analog_value)+','+sensors;
             }else
             {
-                console.log("No sensors on port 1");
+                //console.log("No sensors on port 1");
                 sensors='port1:null,'+sensors;
             }
 
             //here we check which sensors are connected
             //on port 2
             var port2_value=parseFloat(b.analogRead('P9_37')).toFixed(2);
+            var port2_analog_value=parseFloat(b.analogRead('P9_38')).toFixed(3);
+
             if(  (port2_value<=0.52) && (port2_value>=0.49) )
             {
-                console.log("Pressure sensor connected on port 2");
-                sensors='port2:pressure,'+sensors;
+                //console.log("Pressure sensor connected on port 2");
+                sensors='port2:pressure:'+printPressure(port2_analog_value)+','+sensors;
             }else if((port2_value<=0.1) && (port2_value>=0.09))
             {
-                console.log("Temp sensor connected on port 2");
-                sensors='port2:temp,'+sensors;
+                //console.log("Temp sensor connected on port 2");
+                sensors='port2:temp:'+printTemp(port2_analog_value)+','+sensors;
             }else
             {
-                console.log("No sensors on port 2");
+                //console.log("No sensors on port 2");
                 sensors='port2:null,'+sensors;
             }
 
             //here we check which sensors are connected
             //on port 3
             var port3_value=parseFloat(b.analogRead('P9_35')).toFixed(2);
+            var port3_analog_value=parseFloat(b.analogRead('P9_36')).toFixed(3);
+
             if( (port3_value<=0.52) && (port3_value>=0.49) )
             {
-                console.log("Pressure sensor connected on port 3");
-                sensors='port3:pressure,'+sensors;
+                //console.log("Pressure sensor connected on port 3");
+                sensors='port3:pressure:'+printPressure(port3_analog_value)+','+sensors;
             }else if((port3_value<=0.1) && (port3_value>=0.09))
             {
-                console.log("Temp sensor connected on port 3");
-                sensors='port3:temp,'+sensors;
+                //console.log("Temp sensor connected on port 3");
+                sensors='port3:temp:'+printTemp(port3_analog_value)+','+sensors;
             }else
             {
-                console.log("No sensors on port 3");
+                //console.log("No sensors on port 3");
                 sensors='port3:null,'+sensors;
             }
 
             socket.emit('sensors', sensors);
-            socket.broadcast.emit('sensors', sensors);
+            //socket.broadcast.emit('sensors', sensors);
         }
     });
 
 });
 
 
-function printPressure() {
+
+function printPressure(x) {
 
     var pressure = 0;
 
-    var analogVoltage = x.value*1.8; // ADC Value converted to voltage
-
-    console.log('Analog Voltage = ' + analogVoltage);
+    var analogVoltage = x*1.8; // ADC Value converted to voltage
 
     pressure = (analogVoltage*2.7 -2.4)*1000/19.2;
 
-    console.log("Pressure = " +parseFloat(pressure).toFixed(3) + " mBar.");
-
     return parseFloat(pressure).toFixed(3).toString() + " mBar";
+
+}
+
+function printTemp(x) {
+
+    var temp = 0;
+
+    var analogVoltage = x*1.8; // ADC Value converted to voltage
+
+    temp = (analogVoltage*101.25) - 55;
+
+    return parseFloat(temp).toFixed(3) + "&deg; C";
 
 }
 

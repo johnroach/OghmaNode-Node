@@ -102,6 +102,7 @@
                         {
                             $("#datasouce-1").show();
                             $("#sensorname1").html("Pressure Sensor");
+                            $("#sensor_value1").html(split_sensor_array[2]);
                         }else if(split_sensor_array[1]=="temp")
                         {
                             $("#datasouce-1").show();
@@ -119,6 +120,7 @@
                         {
                             $("#datasouce-2").show();
                             $("#sensorname2").html("Pressure Sensor");
+                            $("#sensor_value2").html(split_sensor_array[2]);
                         }else if(split_sensor_array[1]=="temp")
                         {
                             $("#datasouce-2").show();
@@ -136,6 +138,7 @@
                         {
                             $("#datasouce-3").show();
                             $("#sensorname3").html("Pressure Sensor");
+                            $("#sensor_value3").html(split_sensor_array[2]);
                         }else if(split_sensor_array[1]=="temp")
                         {
                             $("#datasouce-3").show();
@@ -289,19 +292,25 @@
                 </ul>
             </div>
             <div id="one" class="ui-body-d ui-content">
-                <div id="datasouce-1" style="background-color: darkred;color: whitesmoke;height: 200px;padding: 5px;">PORT1 : <span id="sensorname1" name="sensorname1"></span><br/> </div>
-                <div id="datasouce-2" style="background-color: darkslategray;color: whitesmoke;height: 200px; padding: 5px;">PORT2 : <span id="sensorname2" name="sensorname2"></span><br/> </div>
-                <div id="datasouce-3" style="background-color: darkblue;color: whitesmoke;height: 200px;padding: 5px;">PORT3 : <span id="sensorname3" name="sensorname3"></span><br/> </div>
-                <div id="datasouce-4" style="background-color: darkmagenta;color: whitesmoke;height: 200px;padding: 5px;">DIGI : <span id="diginame" name="diginame"></span><br/> </div>
+                <div id="datasouce-1" style="background-color: darkred;color: whitesmoke;height: 200px;padding: 5px;">
+                    PORT1 : <span id="sensorname1" name="sensorname1"></span><br/>
+                    <span id="sensor_value1" name="sensor_value1" style="font-size: large"></span>
+                </div>
+                <div id="datasouce-2" style="background-color: darkslategray;color: whitesmoke;height: 200px; padding: 5px;">
+                    PORT2 : <span id="sensorname2" name="sensorname2"></span><br/>
+                    <span id="sensor_value2" name="sensor_value1" style="font-size: large"></span>
+                </div>
+                <div id="datasouce-3" style="background-color: darkblue;color: whitesmoke;height: 200px;padding: 5px;">
+                    PORT3 : <span id="sensorname3" name="sensorname3"></span><br/>
+                    <span id="sensor_value3" name="sensor_value1" style="font-size: large"></span>
+                </div>
+                <div id="datasouce-4" style="background-color: darkmagenta;color: whitesmoke;height: 200px;padding: 5px;">
+                    DIGI : <span id="diginame" name="diginame"></span><br/>
+                    <span id="digi_value" name="digi_value" style="font-size: large"></span>
+                </div>
             </div>
             <div id="two">
-                <ul data-role="listview" data-inset="true">
-                    <li><a href="#">Acura</a></li>
-                    <li><a href="#">Audi</a></li>
-                    <li><a href="#">BMW</a></li>
-                    <li><a href="#">Cadillac</a></li>
-                    <li><a href="#">Ferrari</a></li>
-                </ul>
+                <p>............Hullo....</p>
             </div>
             <div id="three">
                <p>Hullo!</p>
