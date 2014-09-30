@@ -5,6 +5,7 @@
 var path = require('path');
 var fs = require('fs');
 var b = require('bonescript');
+var NanoTimer = require('nanotimer');
 
 //need to broadcast where I am to server so the android can pick it up
 /*var socketing = require('socket.io-client')('http://192.168.0.17:8087');
