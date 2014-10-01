@@ -13,9 +13,12 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/high/highcharts.js"></script>
     <script src="js/high/modules/exporting.js"></script>
+    <script type="text/javascript" src="js/jsonTable.js"></script>
 
     <!-- css file for mobile devices -->
     <LINK href="js/jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css">
+
+
 
     <!-- Code for socket.io and device orientation handling -->
     <script>
@@ -38,13 +41,15 @@
         function start_stop(){
             if (status=='stop')
             {
+                $('#data_table').find('tbody').remove();
                 status='readData';
                 window.clearInterval(myVar);
                 data_index=0;
                 socket.emit('initialize','false');
                 time_interval=parseInt($('#datarate').val());
                 socket.emit('start_data_collection','true',time_interval);
-                $("#tabs").tabs("option", "active", 1);
+                $("#tabs").tabs("option", "active", 2);
+
 
             }else if(status =='readData')
             {
@@ -55,43 +60,31 @@
             }
         }
 
-        /*        socket.on('1stsensorvalue', function (data) {
-            console.log(data);
-            //$("#data1").val(data);
-            $("#data1").html("<b>"+data+"</b>  mBar");
-            latest_data = data;
-            datalog.push({
-                x: current_time,
-                y: data
-            });
-            if(current_time>=0)
-            {
-                var table = document.getElementById("data_table");
-                var row = table.insertRow(-1);
-                var cell1 = row.insertCell(0);
-                var cell2 = row.insertCell(1);
-                cell1.innerHTML = current_time;
-                cell2.innerHTML = "<b>"+data+"</b>";
+        var options = {
+            source: all_data,
+            callback: function(){
+                alert("Table generated!");
             }
-
-        });*/
-
+        };
 
         socket.on('collected_sensor_data',function(collected_data)
-        {//got sensor data... now use it damn it...
-         //data comes in the following format
-         //{"Time(ms)":"670","Temperature(C)":"17.353","P1":"temp","Pressure(mBr)":"69.906","P2":"pressure","P3":"null"}
-         //console.log(collected_data);
-            all_data=collected_data;
-            console.log(all_data);
-            obj = jQuery.parseJSON( all_data );
-            console.log(obj.data[0].time+'');
+        {//get data in string than turn to json data
+            all_data = jQuery.parseJSON( collected_data );
 
+            var newRowContent = "<tr><td>"+all_data.data[0].time+"</td><td>"+all_data.data[0].pressure+"</td><td>"+all_data.data[0].temp+"</td></tr>";
+            $("#data_table").append(newRowContent);
 
+            // Call the refresh method
+            $("#data_table").closest( "table#table-column-toggle" );
+            $("#data_table").table( "refresh" );
+            // Trigger if the new injected markup contain links or buttons that need to be enhanced
+            $("#data_table").trigger( "create" );
         });
 
+        //@TODO turn this to JSON data too...
         socket.on('sensors',function(sensors)
         {//get list of sensors at stop
+
             var current_sensor_array = sensors.split(',');
             var i;
 
@@ -171,88 +164,12 @@
             $(document).ready(function() {
 
                 //hiding unused elements at first
-                $("#data_table").hide();
                 $("#datasouce-1").hide();
                 $("#datasouce-2").hide();
                 $("#datasouce-3").hide();
                 $("#datasouce-4").hide();
 
                 $("#tabs").tabs();
-
-                /*Highcharts.setOptions({
-                    global: {
-                        useUTC: false
-                    }
-                });*/
-
-                /*var chart;
-                $('#container').highcharts({
-                    chart: {
-                        zoomType: 'x',
-                        spacingRight: 20,
-                        animation: Highcharts.svg, // don't animate in old IE
-                        marginRight: 10,
-                        events: {
-                            load: function() {
-
-                                // set up the updating of the chart each second
-                                var series = this.series[0];
-                                setInterval(function() {
-                                    current_time = current_time+100, // current time
-                                            series.addPoint([current_time, latest_data], true, true);
-                                }, 100);
-                            }
-                        }
-                    },
-                    title: {
-                        text: 'Pressure Data'
-                    },
-
-                    xAxis: {
-                        tickPixelInterval: 150
-                    },
-                    yAxis: {
-                        title: {
-                            text: 'mBar'
-                        },
-                        plotLines: [{
-                            value: 0,
-                            width: 1,
-                            color: '#808080'
-                        }]
-                    },
-                    tooltip: {
-                        formatter: function() {
-                            return '<b>'+ this.series.name +'</b><br/>'+
-                                    Highcharts.numberFormat(this.y, 2); +', '+
-                            Highcharts.numberFormat(this.x, 2);
-                        }
-                    },
-                    legend: {
-                        enabled: true
-                    },
-                    exporting: {
-                        enabled: true
-                    },
-                    series: [{
-                        name: 'Pressure Reading',
-                        data: (function() {
-                            // generate an array of random data
-                            var data = [],
-                                    time = (new Date()).getTime(),
-                                    i;
-
-                            for (i = -50; i <= 0; i++) {
-                                data.push({
-                                    x: current_time,
-                                    y: latest_data
-                                });
-                            }
-                            console.log(data);
-                            return data;
-                        })()
-                    }]
-                });*/
             });
 
         });
@@ -304,7 +221,16 @@
                 <div id="container" style="min-width:100%; height: 400px; margin: 0 auto"></div>
             </div>
             <div id="three">
-               <p>Hullo!</p>
+                <table id="data_table" name="data_table" data-role="table" data-mode="columntoggle" class="ui-responsive table-stroke">
+                    <thead>
+                    <tr>
+                        <th data-priority="1"> Time </th>
+                        <th data-priority="2"> Pressure </th>
+                        <th data-priority="3"> Temperature </th>
+                    </tr>
+                    </thead>
+
+                </table>
             </div>
         </div>
 
