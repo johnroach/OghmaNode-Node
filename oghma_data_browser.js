@@ -7,6 +7,10 @@ var fs = require('fs');
 var b = require('bonescript');
 var NanoTimer = require('nanotimer');
 
+//define digital inputs
+b.pinMode("P9_11", b.INPUT);
+b.pinMode("P9_12", b.INPUT);
+
 //need to broadcast where I am to server so the android can pick it up
 /*var socketing = require('socket.io-client')('http://192.168.0.17:8087');
  socketing.on('connect', function(){
@@ -169,6 +173,10 @@ io.sockets.on('connection', function (socket) {
             //on port 1
             var port1_value=parseFloat(b.analogRead('P9_39')).toFixed(2);
             var port1_analog_value=parseFloat(b.analogRead('P9_40')).toFixed(3);
+
+            console.log("port1_ident_value:"+port1_value);
+            console.log("port1_value:"+printCurrent(port1_analog_value));
+
             if(  (port1_value<=0.52) && (port1_value>=0.49) )
             {
                 //console.log("Pressure sensor connected on port 1");
@@ -230,6 +238,18 @@ io.sockets.on('connection', function (socket) {
 
             sensors_json = sensors_json+port3_sensor_data;
 
+            //here we check which sensors are connected
+            //on port 3
+
+            //port 4 digital...
+            //var port4_detection_value=parseFloat(b.analogRead('P9_33')).toFixed(2);
+            //var port4_digital_value=b.digitalRead('P9_12');
+            //console.log("port4_detection_value:"+port4_detection_value);
+            //console.log("port4_digital_value"+port4_digital_value);
+
+
+
+
             full_dataset = sensors_json + '},' + full_dataset ;
 
             current_time=parseInt(time_interval)+parseInt(current_time);
@@ -269,6 +289,29 @@ function printTemp(x) {
     temp = (analogVoltage*101.25) - 55;
 
     return parseFloat(temp).toFixed(3) ;
+
+}
+
+function printVoltage(x) {
+
+    var voltage = 0;
+
+    var analogVoltage = x*1.8; // ADC Value converted to voltage
+
+    voltage = (2*((analogVoltage*33.3)-27.2))+0.3;
+
+    return parseFloat(voltage).toFixed(3).toString() ;
+
+}
+
+
+function printCurrent(x) {
+
+    var current = 0;
+
+    current = (x-0.206)*54.05;
+
+    return parseFloat(current).toFixed(3).toString() ;
 
 }
 
