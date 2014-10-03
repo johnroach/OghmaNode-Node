@@ -8,8 +8,8 @@ var b = require('bonescript');
 var NanoTimer = require('nanotimer');
 
 //define digital inputs
-b.pinMode("P9_11", b.INPUT);
-b.pinMode("P9_12", b.INPUT);
+b.bone.pinMode("P9_11", b.INPUT);
+b.bone.pinMode("P9_12", b.INPUT);
 
 //need to broadcast where I am to server so the android can pick it up
 /*var socketing = require('socket.io-client')('http://192.168.0.17:8087');
@@ -270,7 +270,7 @@ io.sockets.on('connection', function (socket) {
 
 function printPressure(x) {
 
-    var pressure = 0;
+    var pressure;
 
     var analogVoltage = x*1.8; // ADC Value converted to voltage
 
@@ -282,7 +282,7 @@ function printPressure(x) {
 
 function printTemp(x) {
 
-    var temp = 0;
+    var temp;
 
     var analogVoltage = x*1.8; // ADC Value converted to voltage
 
@@ -294,7 +294,7 @@ function printTemp(x) {
 
 function printVoltage(x) {
 
-    var voltage = 0;
+    var voltage;
 
     var analogVoltage = x*1.8; // ADC Value converted to voltage
 
@@ -307,7 +307,7 @@ function printVoltage(x) {
 
 function printCurrent(x) {
 
-    var current = 0;
+    var current;
 
     current = (x-0.206)*54.05;
 
@@ -318,7 +318,7 @@ function printCurrent(x) {
 
 // Get server IP address on LAN
 function getIPAddress() {
-    var interfaces = require('os').networkInterfaces();
+        var interfaces = require('os').networkInterfaces();
     for (var devName in interfaces) {
         var iface = interfaces[devName];
         for (var i = 0; i < iface.length; i++) {
