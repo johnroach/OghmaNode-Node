@@ -37,11 +37,16 @@
         time_interval=10;
         current_time=-1000;
         var status='stop';
+        var created_header="false";
 
         function start_stop(){
             if (status=='stop')
             {
+                //clean data_table
                 $('#data_table').find('tbody').remove();
+                $('#data_table').find('thead').remove();
+                created_header="false";
+
                 status='readData';
                 window.clearInterval(myVar);
                 data_index=0;
@@ -70,12 +75,280 @@
         socket.on('collected_sensor_data',function(collected_data)
         {//get data in string than turn to json data
 
-            console.log(collected_data);
+
 
             all_data = jQuery.parseJSON( collected_data );
 
+            show_data_at_reading_tab(all_data.data[0]);
 
-            var newRowContent = "<tr><td>"+all_data.data[0].time+"</td><td>"+all_data.data[0].pressure+"</td><td>"+all_data.data[0].temp+"</td></tr>";
+            if(created_header=="false")
+            {
+                //create header if hasn't been created
+                var port1_sensor=all_data.data[0].P1;
+                var port2_sensor=all_data.data[0].P2;
+                var port3_sensor=all_data.data[0].P3;
+                var digi_sensor=all_data.data[0].DIGI;
+                var column_index=0;
+
+                var table = document.getElementById("data_table");
+                var header = table.createTHead();
+
+                var row = header.insertRow(0);
+
+                var cell = row.insertCell(column_index);
+                cell.innerHTML = "Time";
+                column_index=column_index+1;
+
+                switch (port1_sensor)
+                {
+                    case "temp":
+                        var cell = row.insertCell(column_index);
+                        cell.innerHTML = "Temperature (&deg;C)";
+                        cell.setAttribute("data-priority", column_index+1);
+                        column_index=column_index+1;
+                        break;
+
+                    case "pressure":
+                        var cell = row.insertCell(column_index);
+                        cell.innerHTML = "Pressure (mBar)";
+                        cell.setAttribute("data-priority", column_index+1);
+                        column_index=column_index+1;
+                        break;
+
+                    case "voltage":
+                        var cell = row.insertCell(column_index);
+                        cell.innerHTML = "Voltage (V)";
+                        cell.setAttribute("data-priority", column_index+1);
+                        column_index=column_index+1;
+                        break;
+
+                    case "current":
+                        var cell = row.insertCell(column_index);
+                        cell.innerHTML = "Current (A)";
+                        cell.setAttribute("data-priority", column_index+1);
+                        column_index=column_index+1;
+                        break;
+
+                    case "conductivity":
+                        var cell = row.insertCell(column_index);
+                        cell.innerHTML = "Conductivity (&#181;S/cm) ";
+                        cell.setAttribute("data-priority", column_index+1);
+                        column_index=column_index+1;
+                        break;
+
+                    case "photogate":
+                        var cell = row.insertCell(column_index);
+                        cell.innerHTML = "Photogate";
+                        cell.setAttribute("data-priority", column_index+1);
+                        column_index=column_index+1;
+                        break;
+                }
+
+                switch (port2_sensor)
+                {
+                    case "temp":
+                        var cell = row.insertCell(column_index);
+                        cell.innerHTML = "Temperature (&deg;C)";
+                        cell.setAttribute("data-priority", column_index+1);
+                        column_index=column_index+1;
+                        break;
+
+                    case "pressure":
+                        var cell = row.insertCell(column_index);
+                        cell.innerHTML = "Pressure (mBar)";
+                        cell.setAttribute("data-priority", column_index+1);
+                        column_index=column_index+1;
+                        break;
+
+                    case "voltage":
+                        var cell = row.insertCell(column_index);
+                        cell.innerHTML = "Voltage (V)";
+                        cell.setAttribute("data-priority", column_index+1);
+                        column_index=column_index+1;
+                        break;
+
+                    case "current":
+                        var cell = row.insertCell(column_index);
+                        cell.innerHTML = "Current (A)";
+                        cell.setAttribute("data-priority", column_index+1);
+                        column_index=column_index+1;
+                        break;
+
+                    case "conductivity":
+                        var cell = row.insertCell(column_index);
+                        cell.innerHTML = "Conductivity (&#181;S/cm) ";
+                        cell.setAttribute("data-priority", column_index+1);
+                        column_index=column_index+1;
+                        break;
+
+                    case "photogate":
+                        var cell = row.insertCell(column_index);
+                        cell.innerHTML = "Photogate";
+                        cell.setAttribute("data-priority", column_index+1);
+                        column_index=column_index+1;
+                        break;
+                }
+
+                switch (port3_sensor)
+                {
+                    case "temp":
+                        var cell = row.insertCell(column_index);
+                        cell.innerHTML = "Temperature (&deg;C)";
+                        cell.setAttribute("data-priority", column_index+1);
+                        column_index=column_index+1;
+                        break;
+
+                    case "pressure":
+                        var cell = row.insertCell(column_index);
+                        cell.innerHTML = "Pressure (mBar)";
+                        cell.setAttribute("data-priority", column_index+1);
+                        column_index=column_index+1;
+                        break;
+
+                    case "voltage":
+                        var cell = row.insertCell(column_index);
+                        cell.innerHTML = "Voltage (V)";
+                        cell.setAttribute("data-priority", column_index+1);
+                        column_index=column_index+1;
+                        break;
+
+                    case "current":
+                        var cell = row.insertCell(column_index);
+                        cell.innerHTML = "Current (A)";
+                        cell.setAttribute("data-priority", column_index+1);
+                        column_index=column_index+1;
+                        break;
+
+                    case "conductivity":
+                        var cell = row.insertCell(column_index);
+                        cell.innerHTML = "Conductivity (&#181;S/cm) ";
+                        cell.setAttribute("data-priority", column_index+1);
+                        column_index=column_index+1;
+                        break;
+
+                    case "photogate":
+                        var cell = row.insertCell(column_index);
+                        cell.innerHTML = "Photogate";
+                        cell.setAttribute("data-priority", column_index+1);
+                        column_index=column_index+1;
+                        break;
+                }
+
+                switch (digi_sensor)
+                {
+
+                    case "photogate":
+                        var cell = row.insertCell(column_index);
+                        cell.innerHTML = "Photogate";
+                        cell.setAttribute("data-priority", column_index+1);
+                        column_index=column_index+1;
+                        break;
+                }
+
+                created_header="true";
+
+                // Call the refresh method
+                $("#data_table").closest( "table#table-column-toggle" );
+                $("#data_table").table( "refresh" );
+                // Trigger if the new injected markup contain links or buttons that need to be enhanced
+                $("#data_table").trigger( "create" );
+            }
+
+            var newRowContent = "<tr><td>"+all_data.data[0].time+"</td>";
+
+            var port1_sensor=all_data.data[0].P1;
+            var port2_sensor=all_data.data[0].P2;
+            var port3_sensor=all_data.data[0].P3;
+            var digi_sensor=all_data.data[0].DIGI;
+
+            switch (port1_sensor)
+            {
+                case "temp":
+                    newRowContent=newRowContent+"<td>"+all_data.data[0].temp+"</td>";
+                    break;
+
+                case "pressure":
+                    newRowContent=newRowContent+"<td>"+all_data.data[0].pressure+"</td>";
+                    break;
+
+                case "voltage":
+                    newRowContent=newRowContent+"<td>"+all_data.data[0].voltage+"</td>";
+                    break;
+
+                case "current":
+                    newRowContent=newRowContent+"<td>"+all_data.data[0].current+"</td>";
+                    break;
+
+                case "conductivity":
+                    newRowContent=newRowContent+"<td>"+all_data.data[0].conductivity+"</td>";
+                    break;
+
+                case "photogate":
+                    newRowContent=newRowContent+"<td>"+all_data.data[0].photogate+"</td>";
+                    break;
+            }
+
+            switch (port2_sensor)
+            {
+                case "temp":
+                    newRowContent=newRowContent+"<td>"+all_data.data[0].temp+"</td>";
+                    break;
+
+                case "pressure":
+                    newRowContent=newRowContent+"<td>"+all_data.data[0].pressure+"</td>";
+                    break;
+
+                case "voltage":
+                    newRowContent=newRowContent+"<td>"+all_data.data[0].voltage+"</td>";
+                    break;
+
+                case "current":
+                    newRowContent=newRowContent+"<td>"+all_data.data[0].current+"</td>";
+                    break;
+
+                case "conductivity":
+                    newRowContent=newRowContent+"<td>"+all_data.data[0].conductivity+"</td>";
+                    break;
+
+                case "photogate":
+                    newRowContent=newRowContent+"<td>"+all_data.data[0].photogate+"</td>";
+                    break;
+            }
+
+            switch (port3_sensor)
+            {
+                case "temp":
+                    newRowContent=newRowContent+"<td>"+all_data.data[0].temp+"</td>";
+                    break;
+
+                case "pressure":
+                    newRowContent=newRowContent+"<td>"+all_data.data[0].pressure+"</td>";
+                    break;
+
+                case "voltage":
+                    newRowContent=newRowContent+"<td>"+all_data.data[0].voltage+"</td>";
+                    break;
+
+                case "current":
+                    newRowContent=newRowContent+"<td>"+all_data.data[0].current+"</td>";
+                    break;
+
+                case "conductivity":
+                    newRowContent=newRowContent+"<td>"+all_data.data[0].conductivity+"</td>";
+                    break;
+
+                case "photogate":
+                    newRowContent=newRowContent+"<td>"+all_data.data[0].photogate+"</td>";
+                    break;
+            }
+
+            switch (digi_sensor)
+            {
+                case "photogate":
+                    newRowContent=newRowContent+"<td>"+all_data.data[0].photogate+"</td>";
+                    break;
+            }
+
             $("#data_table").append(newRowContent);
 
             // Call the refresh method
@@ -90,11 +363,18 @@
         {//get list of sensors at stop
 
             var parsed_sensor_data=jQuery.parseJSON(sensors);
-            console.log(parsed_sensor_data);
-            var port1_sensor=parsed_sensor_data.data[0].P1;
-            var port2_sensor=parsed_sensor_data.data[0].P2;
-            var port3_sensor=parsed_sensor_data.data[0].P3;
-            var digi_sensor=parsed_sensor_data.data[0].DIGI;
+            var last_input_from_node=parsed_sensor_data.data[0];
+
+            show_data_at_reading_tab(last_input_from_node);
+
+        });
+
+        function show_data_at_reading_tab(last_input_from_node)
+        {
+            var port1_sensor=last_input_from_node.P1;
+            var port2_sensor=last_input_from_node.P2;
+            var port3_sensor=last_input_from_node.P3;
+            var digi_sensor=last_input_from_node.DIGI;
 
             if(port1_sensor!="null")
             {
@@ -103,11 +383,11 @@
                 if(port1_sensor=="pressure")
                 {
                     $("#sensorname1").html("Pressure Sensor");
-                    $("#sensor_value1").html(parsed_sensor_data.data[0].pressure+ " mBar");
+                    $("#sensor_value1").html(last_input_from_node.pressure+ " mBar");
                 }else if (port1_sensor=="temp")
                 {
                     $("#sensorname1").html("Temperature Sensor");
-                    $("#sensor_value1").html(parsed_sensor_data.data[0].temp+ " &deg;C");
+                    $("#sensor_value1").html(last_input_from_node.temp+ " &deg;C");
                 }
 
             }else
@@ -123,11 +403,11 @@
                 if(port2_sensor=="pressure")
                 {
                     $("#sensorname2").html("Pressure Sensor");
-                    $("#sensor_value2").html(parsed_sensor_data.data[0].pressure+ " mBar");
+                    $("#sensor_value2").html(last_input_from_node.pressure+ " mBar");
                 }else if (port2_sensor=="temp")
                 {
                     $("#sensorname2").html("Temperature Sensor");
-                    $("#sensor_value2").html(parsed_sensor_data.data[0].temp+ " &deg;C");
+                    $("#sensor_value2").html(last_input_from_node.temp+ " &deg;C");
                 }
 
             }else
@@ -143,11 +423,11 @@
                 if(port3_sensor=="pressure")
                 {
                     $("#sensorname3").html("Pressure Sensor");
-                    $("#sensor_value3").html(parsed_sensor_data.data[0].pressure+ " mBar");
+                    $("#sensor_value3").html(last_input_from_node.pressure+ " mBar");
                 }else if (port3_sensor=="temp")
                 {
                     $("#sensorname3").html("Temperature Sensor");
-                    $("#sensor_value3").html(parsed_sensor_data.data[0].temp+ " &deg;C");
+                    $("#sensor_value3").html(last_input_from_node.temp+ " &deg;C");
                 }
 
             }else
@@ -163,7 +443,7 @@
                 if(digi_sensor=="photogate")
                 {
                     $("#diginame").html("Photogate");
-                    $("#digi_value").html(parsed_sensor_data.data[0].photogate+ "");
+                    $("#digi_value").html(last_input_from_node.photogate+ "");
                 }
 
             }else
@@ -171,8 +451,7 @@
                 $("#datasouce-4").hide();
                 $("#diginame").html(" ");
             }
-
-        });
+        }
 
         function readDatafromB(){
             socket.emit('initialize','true');
@@ -188,6 +467,9 @@
                 $("#datasouce-4").hide();
 
                 $("#tabs").tabs();
+
+
+
             });
 
         });
@@ -240,13 +522,7 @@
             </div>
             <div id="three">
                 <table id="data_table" name="data_table" data-role="table" data-mode="columntoggle" class="ui-responsive table-stroke">
-                    <thead>
-                    <tr>
-                        <th data-priority="1"> Time </th>
-                        <th data-priority="2"> Pressure </th>
-                        <th data-priority="3"> Temperature </th>
-                    </tr>
-                    </thead>
+
 
                 </table>
             </div>

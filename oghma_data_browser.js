@@ -88,13 +88,10 @@ io.sockets.on('connection', function (socket) {
                 + ','+get_sensor_type_and_value("P3")
                 + ','+get_sensor_type_and_value("DIGI")
                 + '}' ;
-            console.log('{"data":['+sensors_and_data+']}');
+
             socket.emit('sensors',('{"data":['+sensors_and_data+']}'));
             //socket.broadcast.emit('sensors', sensors);
 
-        }else
-        {
-            console.log("user stopped init");
         }
     });
 
