@@ -69,7 +69,11 @@
 
         socket.on('collected_sensor_data',function(collected_data)
         {//get data in string than turn to json data
+
+            console.log(collected_data);
+
             all_data = jQuery.parseJSON( collected_data );
+
 
             var newRowContent = "<tr><td>"+all_data.data[0].time+"</td><td>"+all_data.data[0].pressure+"</td><td>"+all_data.data[0].temp+"</td></tr>";
             $("#data_table").append(newRowContent);
@@ -81,77 +85,91 @@
             $("#data_table").trigger( "create" );
         });
 
-        //@TODO turn this to JSON data too...
+
         socket.on('sensors',function(sensors)
         {//get list of sensors at stop
 
-            var current_sensor_array = sensors.split(',');
-            var i;
+            var parsed_sensor_data=jQuery.parseJSON(sensors);
+            console.log(parsed_sensor_data);
+            var port1_sensor=parsed_sensor_data.data[0].P1;
+            var port2_sensor=parsed_sensor_data.data[0].P2;
+            var port3_sensor=parsed_sensor_data.data[0].P3;
+            var digi_sensor=parsed_sensor_data.data[0].DIGI;
 
-            for (i = 0; i < current_sensor_array.length; i++) {
-                if (current_sensor_array[i]!='')
+            if(port1_sensor!="null")
+            {
+                $("#datasouce-1").show();
+
+                if(port1_sensor=="pressure")
                 {
-                    var split_sensor_array = current_sensor_array[i].split(':');
-
-                    //checking PORT1
-                    if (split_sensor_array[0]=="port1")
-                    {
-                        if(split_sensor_array[1]=="pressure")
-                        {
-                            $("#datasouce-1").show();
-                            $("#sensorname1").html("Pressure Sensor");
-                            $("#sensor_value1").html(split_sensor_array[2]+ " mBar");
-                        }else if(split_sensor_array[1]=="temp")
-                        {
-                            $("#datasouce-1").show();
-                            $("#sensorname1").html("Temperature Sensor");
-                            $("#sensor_value1").html(split_sensor_array[2]+ " &deg;C");
-                        }else{
-                            $("#datasouce-1").hide();
-                            $("#sensorname1").html(" ");
-                        }
-                    }
-
-                    //checking PORT2
-                    if (split_sensor_array[0]=="port2")
-                    {
-                        if(split_sensor_array[1]=="pressure")
-                        {
-                            $("#datasouce-2").show();
-                            $("#sensorname2").html("Pressure Sensor");
-                            $("#sensor_value2").html(split_sensor_array[2]+ " mBar");
-                        }else if(split_sensor_array[1]=="temp")
-                        {
-                            $("#datasouce-2").show();
-                            $("#sensorname2").html("Temperature Sensor");
-                            $("#sensor_value2").html(split_sensor_array[2]+ " &deg;C");
-                        }else{
-                            $("#datasouce-2").hide();
-                            $("#sensorname2").html(" ");
-                        }
-                    }
-
-                    //checking PORT3
-                    if (split_sensor_array[0]=="port3")
-                    {
-                        if(split_sensor_array[1]=="pressure")
-                        {
-                            $("#datasouce-3").show();
-                            $("#sensorname3").html("Pressure Sensor");
-                            $("#sensor_value3").html(split_sensor_array[2]+ " mBar");
-                        }else if(split_sensor_array[1]=="temp")
-                        {
-                            $("#datasouce-3").show();
-                            $("#sensorname3").html("Temperature Sensor");
-                            $("#sensor_value3").html(split_sensor_array[2]+ " &deg;C");
-                        }else{
-                            $("#datasouce-3").hide();
-                            $("#sensorname3").html(" ");
-                        }
-                    }
-
+                    $("#sensorname1").html("Pressure Sensor");
+                    $("#sensor_value1").html(parsed_sensor_data.data[0].pressure+ " mBar");
+                }else if (port1_sensor=="temp")
+                {
+                    $("#sensorname1").html("Temperature Sensor");
+                    $("#sensor_value1").html(parsed_sensor_data.data[0].temp+ " &deg;C");
                 }
 
+            }else
+            {
+                $("#datasouce-1").hide();
+                $("#sensorname1").html(" ");
+            }
+
+            if(port2_sensor!="null")
+            {
+                $("#datasouce-2").show();
+
+                if(port2_sensor=="pressure")
+                {
+                    $("#sensorname2").html("Pressure Sensor");
+                    $("#sensor_value2").html(parsed_sensor_data.data[0].pressure+ " mBar");
+                }else if (port2_sensor=="temp")
+                {
+                    $("#sensorname2").html("Temperature Sensor");
+                    $("#sensor_value2").html(parsed_sensor_data.data[0].temp+ " &deg;C");
+                }
+
+            }else
+            {
+                $("#datasouce-2").hide();
+                $("#sensorname2").html(" ");
+            }
+
+            if(port3_sensor!="null")
+            {
+                $("#datasouce-3").show();
+
+                if(port3_sensor=="pressure")
+                {
+                    $("#sensorname3").html("Pressure Sensor");
+                    $("#sensor_value3").html(parsed_sensor_data.data[0].pressure+ " mBar");
+                }else if (port3_sensor=="temp")
+                {
+                    $("#sensorname3").html("Temperature Sensor");
+                    $("#sensor_value3").html(parsed_sensor_data.data[0].temp+ " &deg;C");
+                }
+
+            }else
+            {
+                $("#datasouce-3").hide();
+                $("#sensorname3").html(" ");
+            }
+
+            if(digi_sensor!="null")
+            {
+                $("#datasouce-4").show();
+
+                if(digi_sensor=="photogate")
+                {
+                    $("#diginame").html("Photogate");
+                    $("#digi_value").html(parsed_sensor_data.data[0].photogate+ "");
+                }
+
+            }else
+            {
+                $("#datasouce-4").hide();
+                $("#diginame").html(" ");
             }
 
         });
