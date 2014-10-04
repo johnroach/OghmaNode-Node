@@ -1,7 +1,3 @@
-// Creates a websocket with socket.io
-// Make sure to install socket.io: terminal, goto /var/lib/cloud9 and enter: npm install socket.io
-// Installing this takes a few minutes; wait until the installation is complete
-
 var path = require('path');
 var fs = require('fs');
 var b = require('bonescript');
@@ -100,7 +96,6 @@ io.sockets.on('connection', function (socket) {
         {
             time_interval=parseInt(timer_interval);
             timer.setInterval(savedata, '', timer_interval+'m');
-            //@TODO Maybe we can later on add some sort of limit to data collection??
             //timer.setTimeout(liftOff, [timer], '10s');
         }else
         {
@@ -118,7 +113,6 @@ io.sockets.on('connection', function (socket) {
 
             current_time=parseInt(time_interval)+parseInt(current_time);
 
-            //console.log('collected_sensor_data, '+sensors);
             var pick_me = full_dataset.substring(0, full_dataset.length - 1);
             socket.emit('collected_sensor_data',('{"data":['+pick_me+']}'));
 
@@ -149,16 +143,12 @@ function get_sensor_type_and_value(port_number)
 
             if(  (port1_value<=0.52) && (port1_value>=0.49) )
             {
-                //console.log("Pressure sensor connected on port 1");
                 formatted_result='"pressure:"'+printPressure(port1_analog_value)+'","P1":"pressure"';
-
             }else if((port1_value<=0.1) && (port1_value>=0.09))
             {
-                //console.log("Temp sensor connected on port 1");
                 formatted_result='"temp":"'+printTemp(port1_analog_value)+'","P1":"temp"';
             }else
             {
-                //console.log("No sensors on port 1");
                 formatted_result='"P1":"null"';
             }
 
@@ -172,15 +162,12 @@ function get_sensor_type_and_value(port_number)
 
             if(  (port2_value<=0.52) && (port2_value>=0.49) )
             {
-                //console.log("Pressure sensor connected on port 2");
                 formatted_result='"pressure":"'+printPressure(port2_analog_value)+'","P2":"pressure"';
             }else if((port2_value<=0.1) && (port2_value>=0.09))
             {
-                //console.log("Temp sensor connected on port 2");
                 formatted_result='"temp":"'+printTemp(port2_analog_value)+'","P2":"temp"';
             }else
             {
-                //console.log("No sensors on port 2");
                 formatted_result='"P2":"null"';
             }
 
@@ -195,15 +182,12 @@ function get_sensor_type_and_value(port_number)
 
             if( (port3_value<=0.52) && (port3_value>=0.49) )
             {
-                //console.log("Pressure sensor connected on port 3");
                 formatted_result='"pressure":"'+printPressure(port3_analog_value)+'","P3":"pressure"';
             }else if((port3_value<=0.1) && (port3_value>=0.09))
             {
-                //console.log("Temp sensor connected on port 3");
                 formatted_result='"temp":"'+printTemp(port3_analog_value)+'","P3":"temp"';
             }else
             {
-                //console.log("No sensors on port 3");
                 formatted_result='"P3":"null"';
             }
 

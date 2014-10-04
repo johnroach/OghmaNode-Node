@@ -42,6 +42,10 @@
         function start_stop(){
             if (status=='stop')
             {
+
+                $("#start_button").parent().hide();
+                $("#stop_button").parent().show();
+
                 //clean data_table
                 $('#data_table').find('tbody').remove();
                 $('#data_table').find('thead').remove();
@@ -56,14 +60,21 @@
                 $("#tabs").tabs("option", "active", 2);
 
 
+
             }else if(status =='readData')
             {
                 status='stop';
+
+                $("#start_button").parent().show();
+                $("#stop_button").parent().hide();
+
                 socket.emit('start_data_collection','false',time_interval);
                 socket.emit('initialize','true');
                 myVar = setInterval(function(){readDatafromB()},1000);
             }
         }
+
+
 
         var options = {
             source: all_data,
@@ -74,8 +85,6 @@
 
         socket.on('collected_sensor_data',function(collected_data)
         {//get data in string than turn to json data
-
-
 
             all_data = jQuery.parseJSON( collected_data );
 
@@ -460,11 +469,17 @@
         $(function () {
             $(document).ready(function() {
 
+                $( "#stop_button"  ).button( "option", "theme", "b" );
+
                 //hiding unused elements at first
                 $("#datasouce-1").hide();
                 $("#datasouce-2").hide();
                 $("#datasouce-3").hide();
                 $("#datasouce-4").hide();
+
+                $("#stop_button").parent().hide();
+
+
 
                 $("#tabs").tabs();
 
@@ -489,7 +504,8 @@
         <div data-role="fieldcontain">
              <label for="datarate"><b>Data Time Interval(ms):</b></label><input id="datarate" type="text" name="datarate" value="10" min="10" max="100"/>
          </div>
-        <input type="button" id="start_stop_button" value="Start Data Collection" onclick="start_stop();">
+        <input type="button" id="start_button" name="start_button" value="Start Data Collection" onclick="start_stop();" />
+        <input type="button" id="stop_button" name="stop_button" value="Stop Data Collection" onclick="start_stop();" />
 
         <div data-role="tabs" id="tabs">
             <div data-role="navbar">
@@ -500,21 +516,21 @@
                 </ul>
             </div>
             <div id="one" class="ui-body-d ui-content">
-                <div id="datasouce-1" style="background-color: darkred;color: whitesmoke;height: 150px;padding: 5px;">
+                <div id="datasouce-1" style="background-color: darkred;color: whitesmoke;height: 25%;padding: 5px;">
                     PORT1 : <span id="sensorname1" name="sensorname1"></span><br/>
-                    <span id="sensor_value1" name="sensor_value1" style="font-size: 100px"></span>
+                    <span id="sensor_value1" name="sensor_value1" style="font-size: 510%"></span>
                 </div>
-                <div id="datasouce-2" style="background-color: darkslategray;color: whitesmoke;height: 150px; padding: 5px;">
+                <div id="datasouce-2" style="background-color: darkslategray;color: whitesmoke;height: 25%; padding: 5px;">
                     PORT2 : <span id="sensorname2" name="sensorname2"></span><br/>
-                    <span id="sensor_value2" name="sensor_value1" style="font-size: 100px"></span>
+                    <span id="sensor_value2" name="sensor_value1" style="font-size: 510%"></span>
                 </div>
-                <div id="datasouce-3" style="background-color: darkblue;color: whitesmoke;height: 150px;padding: 5px;">
+                <div id="datasouce-3" style="background-color: darkblue;color: whitesmoke;height: 25%;padding: 5px;">
                     PORT3 : <span id="sensorname3" name="sensorname3"></span><br/>
-                    <span id="sensor_value3" name="sensor_value1" style="font-size: 100px"></span>
+                    <span id="sensor_value3" name="sensor_value1" style="font-size: 510%"></span>
                 </div>
-                <div id="datasouce-4" style="background-color: darkmagenta;color: whitesmoke;height: 150px;padding: 5px;">
+                <div id="datasouce-4" style="background-color: darkmagenta;color: whitesmoke;height: 25%;padding: 5px;">
                     DIGI : <span id="diginame" name="diginame"></span><br/>
-                    <span id="digi_value" name="digi_value" style="font-size: large"></span>
+                    <span id="digi_value" name="digi_value" style="font-size: 510%"></span>
                 </div>
             </div>
             <div id="two">
