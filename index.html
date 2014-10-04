@@ -14,6 +14,7 @@
     <script src="js/high/highcharts.js"></script>
     <script src="js/high/modules/exporting.js"></script>
     <script type="text/javascript" src="js/jsonTable.js"></script>
+    <script type="text/javascript" src="js/canvasjs.min.js"></script>
 
     <!-- css file for mobile devices -->
     <LINK href="js/jquery.mobile-1.4.4.min.css" rel="stylesheet" type="text/css">
@@ -39,6 +40,19 @@
         var status='stop';
         var created_header="false";
 
+        var dps1;
+        var dps2;
+        var dps3;
+        var dps4;
+
+        var chart1;
+        var chart2;
+        var chart3;
+        var chart4;
+
+
+
+
         function start_stop(){
             if (status=='stop')
             {
@@ -57,7 +71,7 @@
                 socket.emit('initialize','false');
                 time_interval=parseInt($('#datarate').val());
                 socket.emit('start_data_collection','true',time_interval);
-                $("#tabs").tabs("option", "active", 2);
+                $("#tabs").tabs("option", "active", 1);
 
 
 
@@ -82,6 +96,9 @@
                 alert("Table generated!");
             }
         };
+
+
+
 
         socket.on('collected_sensor_data',function(collected_data)
         {//get data in string than turn to json data
@@ -114,6 +131,7 @@
                         var cell = row.insertCell(column_index);
                         cell.innerHTML = "Temperature (&deg;C)";
                         cell.setAttribute("data-priority", column_index+1);
+                        create_table_for_dp1("","Time(ms)","Temperature (&deg;C)");
                         column_index=column_index+1;
                         break;
 
@@ -121,6 +139,7 @@
                         var cell = row.insertCell(column_index);
                         cell.innerHTML = "Pressure (mBar)";
                         cell.setAttribute("data-priority", column_index+1);
+                        create_table_for_dp1("","Time(ms)","Pressure (mBar)");
                         column_index=column_index+1;
                         break;
 
@@ -128,6 +147,7 @@
                         var cell = row.insertCell(column_index);
                         cell.innerHTML = "Voltage (V)";
                         cell.setAttribute("data-priority", column_index+1);
+                        create_table_for_dp1("","Time(ms)","Voltage (V)");
                         column_index=column_index+1;
                         break;
 
@@ -135,6 +155,7 @@
                         var cell = row.insertCell(column_index);
                         cell.innerHTML = "Current (A)";
                         cell.setAttribute("data-priority", column_index+1);
+                        create_table_for_dp1("","Time(ms)","Current (A)");
                         column_index=column_index+1;
                         break;
 
@@ -142,6 +163,7 @@
                         var cell = row.insertCell(column_index);
                         cell.innerHTML = "Conductivity (&#181;S/cm) ";
                         cell.setAttribute("data-priority", column_index+1);
+                        create_table_for_dp1("","Time(ms)","Conductivity (&#181;S/cm) ");
                         column_index=column_index+1;
                         break;
 
@@ -149,6 +171,7 @@
                         var cell = row.insertCell(column_index);
                         cell.innerHTML = "Photogate";
                         cell.setAttribute("data-priority", column_index+1);
+                        create_table_for_dp1("","Time(ms)","Gate Status");
                         column_index=column_index+1;
                         break;
                 }
@@ -159,6 +182,7 @@
                         var cell = row.insertCell(column_index);
                         cell.innerHTML = "Temperature (&deg;C)";
                         cell.setAttribute("data-priority", column_index+1);
+                        create_table_for_dp2("","Time(ms)","Temperature (&deg;C)");
                         column_index=column_index+1;
                         break;
 
@@ -166,6 +190,7 @@
                         var cell = row.insertCell(column_index);
                         cell.innerHTML = "Pressure (mBar)";
                         cell.setAttribute("data-priority", column_index+1);
+                        create_table_for_dp2("","Time(ms)","Pressure (mBar)");
                         column_index=column_index+1;
                         break;
 
@@ -173,6 +198,7 @@
                         var cell = row.insertCell(column_index);
                         cell.innerHTML = "Voltage (V)";
                         cell.setAttribute("data-priority", column_index+1);
+                        create_table_for_dp2("","Time(ms)","Voltage (V)");
                         column_index=column_index+1;
                         break;
 
@@ -180,6 +206,7 @@
                         var cell = row.insertCell(column_index);
                         cell.innerHTML = "Current (A)";
                         cell.setAttribute("data-priority", column_index+1);
+                        create_table_for_dp2("","Time(ms)","Current (A)");
                         column_index=column_index+1;
                         break;
 
@@ -274,26 +301,38 @@
             {
                 case "temp":
                     newRowContent=newRowContent+"<td>"+all_data.data[0].temp+"</td>";
+                    dps1.push({x:parseFloat(all_data.data[0].time),y:parseFloat(all_data.data[0].temp) });
+                    chart1.render();
                     break;
 
                 case "pressure":
                     newRowContent=newRowContent+"<td>"+all_data.data[0].pressure+"</td>";
+                    dps1.push({x:parseFloat(all_data.data[0].time),y:parseFloat(all_data.data[0].pressure) });
+                    chart1.render();
                     break;
 
                 case "voltage":
                     newRowContent=newRowContent+"<td>"+all_data.data[0].voltage+"</td>";
+                    dps1.push({x:parseFloat(all_data.data[0].time),y:parseFloat(all_data.data[0].voltage) });
+                    chart1.render();
                     break;
 
                 case "current":
                     newRowContent=newRowContent+"<td>"+all_data.data[0].current+"</td>";
+                    dps1.push({x:parseFloat(all_data.data[0].time),y:parseFloat(all_data.data[0].current) });
+                    chart1.render();
                     break;
 
                 case "conductivity":
                     newRowContent=newRowContent+"<td>"+all_data.data[0].conductivity+"</td>";
+                    dps1.push({x:parseFloat(all_data.data[0].time),y:parseFloat(all_data.data[0].conductivity) });
+                    chart1.render();
                     break;
 
                 case "photogate":
                     newRowContent=newRowContent+"<td>"+all_data.data[0].photogate+"</td>";
+                    dps1.push({x:parseFloat(all_data.data[0].time),y:parseFloat(all_data.data[0].photogate) });
+                    chart1.render();
                     break;
             }
 
@@ -301,26 +340,38 @@
             {
                 case "temp":
                     newRowContent=newRowContent+"<td>"+all_data.data[0].temp+"</td>";
+                    dps2.push({x:parseFloat(all_data.data[0].time),y:parseFloat(all_data.data[0].temp) });
+                    chart2.render();
                     break;
 
                 case "pressure":
                     newRowContent=newRowContent+"<td>"+all_data.data[0].pressure+"</td>";
+                    dps2.push({x:parseFloat(all_data.data[0].time),y:parseFloat(all_data.data[0].pressure) });
+                    chart2.render();
                     break;
 
                 case "voltage":
                     newRowContent=newRowContent+"<td>"+all_data.data[0].voltage+"</td>";
+                    dps2.push({x:parseFloat(all_data.data[0].time),y:parseFloat(all_data.data[0].voltage) });
+                    chart2.render();
                     break;
 
                 case "current":
                     newRowContent=newRowContent+"<td>"+all_data.data[0].current+"</td>";
+                    dps2.push({x:parseFloat(all_data.data[0].time),y:parseFloat(all_data.data[0].current) });
+                    chart2.render();
                     break;
 
                 case "conductivity":
                     newRowContent=newRowContent+"<td>"+all_data.data[0].conductivity+"</td>";
+                    dps2.push({x:parseFloat(all_data.data[0].time),y:parseFloat(all_data.data[0].conductivity) });
+                    chart2.render();
                     break;
 
                 case "photogate":
                     newRowContent=newRowContent+"<td>"+all_data.data[0].photogate+"</td>";
+                    dps2.push({x:parseFloat(all_data.data[0].time),y:parseFloat(all_data.data[0].photogate) });
+                    chart2.render();
                     break;
             }
 
@@ -328,26 +379,38 @@
             {
                 case "temp":
                     newRowContent=newRowContent+"<td>"+all_data.data[0].temp+"</td>";
+                    dps3.push({x:parseFloat(all_data.data[0].time),y:parseFloat(all_data.data[0].temp) });
+                    chart3.render();
                     break;
 
                 case "pressure":
                     newRowContent=newRowContent+"<td>"+all_data.data[0].pressure+"</td>";
+                    dps3.push({x:parseFloat(all_data.data[0].time),y:parseFloat(all_data.data[0].pressure) });
+                    chart3.render();
                     break;
 
                 case "voltage":
                     newRowContent=newRowContent+"<td>"+all_data.data[0].voltage+"</td>";
+                    dps3.push({x:parseFloat(all_data.data[0].time),y:parseFloat(all_data.data[0].voltage) });
+                    chart3.render();
                     break;
 
                 case "current":
                     newRowContent=newRowContent+"<td>"+all_data.data[0].current+"</td>";
+                    dps3.push({x:parseFloat(all_data.data[0].time),y:parseFloat(all_data.data[0].current) });
+                    chart3.render();
                     break;
 
                 case "conductivity":
                     newRowContent=newRowContent+"<td>"+all_data.data[0].conductivity+"</td>";
+                    dps3.push({x:parseFloat(all_data.data[0].time),y:parseFloat(all_data.data[0].conductivity) });
+                    chart3.render();
                     break;
 
                 case "photogate":
                     newRowContent=newRowContent+"<td>"+all_data.data[0].photogate+"</td>";
+                    dps3.push({x:parseFloat(all_data.data[0].time),y:parseFloat(all_data.data[0].photogate) });
+                    chart3.render();
                     break;
             }
 
@@ -355,6 +418,8 @@
             {
                 case "photogate":
                     newRowContent=newRowContent+"<td>"+all_data.data[0].photogate+"</td>";
+                    dps4.push({x:parseFloat(all_data.data[0].time),y:all_data.data[0].photogate });
+                    chart4.render();
                     break;
             }
 
@@ -365,6 +430,113 @@
             $("#data_table").table( "refresh" );
             // Trigger if the new injected markup contain links or buttons that need to be enhanced
             $("#data_table").trigger( "create" );
+
+
+            function create_table_for_dp1(title,axisX,axisY)
+            {
+                var page_width = $( document ).width();
+                dps1=[];
+                chart1 = new CanvasJS.Chart("chartContainer1",{
+                    zoomEnabled: true,
+                    panEnabled: true,
+                    title :{
+                        text: title
+                    },
+                    axisX: {
+                        title: axisX
+                    },
+                    axisY: {
+                        title: axisY
+                    },
+                    width: page_width-20,
+                    data: [{
+                        type: "line",
+                        dataPoints : dps1
+                    }]
+                });
+
+                chart1.render();
+            }
+
+            function create_table_for_dp2(title,axisX,axisY)
+            {
+                var page_width = $( document ).width();
+                dps2=[];
+                chart2 = new CanvasJS.Chart("chartContainer2",{
+                    zoomEnabled: true,
+                    panEnabled: true,
+                    title :{
+                        text: title
+                    },
+                    axisX: {
+                        title: axisX
+                    },
+                    axisY: {
+                        title: axisY
+                    },
+                    width: page_width-20,
+                    data: [{
+                        type: "line",
+                        dataPoints : dps2
+                    }]
+                });
+
+                chart2.render();
+            }
+
+            function create_table_for_dp3(title,axisX,axisY)
+            {
+                var page_width = $( document ).width();
+                dps3=[];
+                chart3 = new CanvasJS.Chart("chartContainer3",{
+                    zoomEnabled: true,
+                    panEnabled: true,
+                    title :{
+                        text: title
+                    },
+                    axisX: {
+                        title: axisX
+                    },
+                    axisY: {
+                        title: axisY
+                    },
+                    width: page_width-20,
+                    data: [{
+                        type: "line",
+                        dataPoints : dps3
+                    }]
+                });
+
+                chart3.render();
+            }
+
+            function create_table_for_dp4(title,axisX,axisY)
+            {
+                var page_width = $( document ).width();
+                dps4=[];
+                chart4 = new CanvasJS.Chart("chartContainer4",{
+                    zoomEnabled: true,
+                    panEnabled: true,
+                    title :{
+                        text: title
+                    },
+                    axisX: {
+                        title: axisX
+                    },
+                    axisY: {
+                        title: axisY
+                    },
+                    width: page_width-20,
+                    height: (page_height/5)*2,
+                    data: [{
+                        type: "line",
+                        dataPoints : dps4
+                    }]
+                });
+
+                chart4.render();
+            }
+
         });
 
 
@@ -480,8 +652,12 @@
                 $("#stop_button").parent().hide();
 
 
-
                 $("#tabs").tabs();
+
+
+
+
+
 
 
 
@@ -534,7 +710,10 @@
                 </div>
             </div>
             <div id="two">
-                <div id="container" style="min-width:100%; height: 400px; margin: 0 auto"></div>
+                <div id="chartContainer1" style="height: 300px; width: 100%;"></div>
+                <div id="chartContainer2" style="height: 300px; width: 100%;"></div>
+                <div id="chartContainer3" style="height: 300px; width: 100%;"></div>
+                <div id="chartContainer4" style="height: 300px; width: 100%;"></div>
             </div>
             <div id="three">
                 <table id="data_table" name="data_table" data-role="table" data-mode="columntoggle" class="ui-responsive table-stroke">
