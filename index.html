@@ -88,18 +88,6 @@
             }
         }
 
-
-
-        var options = {
-            source: all_data,
-            callback: function(){
-                alert("Table generated!");
-            }
-        };
-
-
-
-
         socket.on('collected_sensor_data',function(collected_data)
         {//get data in string than turn to json data
 
