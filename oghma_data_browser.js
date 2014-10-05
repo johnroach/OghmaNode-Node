@@ -139,7 +139,7 @@ function get_sensor_type_and_value(port_number){
             //on port 1
             var port1_value=parseFloat(b.analogRead('P9_39')).toFixed(2);
             var port1_analog_value=parseFloat(b.analogRead('P9_40')).toFixed(3);
-            console.log(port1_value);
+
             if(  (port1_value<=0.52) && (port1_value>=0.49) )
             {
                 formatted_result='"pressure:"'+printPressure(port1_analog_value)+'","P1":"pressure"';
@@ -161,7 +161,7 @@ function get_sensor_type_and_value(port_number){
             //on port 2
             var port2_value=parseFloat(b.analogRead('P9_37')).toFixed(2);
             var port2_analog_value=parseFloat(b.analogRead('P9_38')).toFixed(3);
-            console.log(port2_value);
+
             if(  (port2_value<=0.52) && (port2_value>=0.49) )
             {
                 formatted_result='"pressure":"'+printPressure(port2_analog_value)+'","P2":"pressure"';
@@ -184,7 +184,7 @@ function get_sensor_type_and_value(port_number){
             //on port 3
             var port3_value=parseFloat(b.analogRead('P9_35')).toFixed(2);
             var port3_analog_value=parseFloat(b.analogRead('P9_36')).toFixed(3);
-            console.log(port3_value);
+
             if( (port3_value<=0.52) && (port3_value>=0.49) )
             {
                 formatted_result='"pressure":"'+printPressure(port3_analog_value)+'","P3":"pressure"';
