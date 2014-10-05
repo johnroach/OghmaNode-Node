@@ -69,7 +69,7 @@ var time_interval=0;
 var timer = new NanoTimer();
 var full_dataset='';
 
-io.sockets.on('connection', function (socket) {
+io.sockets.on('connection', function (socket){
 
     socket.on('initialize',function(init_bool){
         //need to get list of sensors after stop (i.e. before a experiment starts)
@@ -123,8 +123,7 @@ io.sockets.on('connection', function (socket) {
 });
 
 
-function get_sensor_type_and_value(port_number)
-{
+function get_sensor_type_and_value(port_number){
     //this function takes port code as parameter
     //Port numbers can be P1,P2,P3,DIGI
     //returns a json string
@@ -140,10 +139,13 @@ function get_sensor_type_and_value(port_number)
             //on port 1
             var port1_value=parseFloat(b.analogRead('P9_39')).toFixed(2);
             var port1_analog_value=parseFloat(b.analogRead('P9_40')).toFixed(3);
-
+            console.log(port1_value);
             if(  (port1_value<=0.52) && (port1_value>=0.49) )
             {
                 formatted_result='"pressure:"'+printPressure(port1_analog_value)+'","P1":"pressure"';
+            }else if((port1_value<=0.35) && (port1_value>=0.33))
+            {
+                formatted_result='"voltage":"'+printVoltage(port1_analog_value)+'","P1":"voltage"';
             }else if((port1_value<=0.1) && (port1_value>=0.09))
             {
                 formatted_result='"temp":"'+printTemp(port1_analog_value)+'","P1":"temp"';
@@ -159,10 +161,13 @@ function get_sensor_type_and_value(port_number)
             //on port 2
             var port2_value=parseFloat(b.analogRead('P9_37')).toFixed(2);
             var port2_analog_value=parseFloat(b.analogRead('P9_38')).toFixed(3);
-
+            console.log(port2_value);
             if(  (port2_value<=0.52) && (port2_value>=0.49) )
             {
                 formatted_result='"pressure":"'+printPressure(port2_analog_value)+'","P2":"pressure"';
+            }else if((port2_value<=0.35) && (port2_value>=0.33))
+            {
+                formatted_result='"voltage":"'+printVoltage(port2_analog_value)+'","P2":"voltage"';
             }else if((port2_value<=0.1) && (port2_value>=0.09))
             {
                 formatted_result='"temp":"'+printTemp(port2_analog_value)+'","P2":"temp"';
@@ -179,10 +184,13 @@ function get_sensor_type_and_value(port_number)
             //on port 3
             var port3_value=parseFloat(b.analogRead('P9_35')).toFixed(2);
             var port3_analog_value=parseFloat(b.analogRead('P9_36')).toFixed(3);
-
+            console.log(port3_value);
             if( (port3_value<=0.52) && (port3_value>=0.49) )
             {
                 formatted_result='"pressure":"'+printPressure(port3_analog_value)+'","P3":"pressure"';
+            }else if((port3_value<=0.35) && (port3_value>=0.33))
+            {
+                formatted_result='"voltage":"'+printVoltage(port3_analog_value)+'","P3":"voltage"';
             }else if((port3_value<=0.1) && (port3_value>=0.09))
             {
                 formatted_result='"temp":"'+printTemp(port3_analog_value)+'","P3":"temp"';
@@ -207,7 +215,7 @@ function get_sensor_type_and_value(port_number)
 
 }
 
-function printPressure(x) {
+function printPressure(x){
 
     var pressure;
 
@@ -219,7 +227,7 @@ function printPressure(x) {
 
 }
 
-function printTemp(x) {
+function printTemp(x){
 
     var temp;
 
@@ -231,7 +239,7 @@ function printTemp(x) {
 
 }
 
-function printVoltage(x) {
+function printVoltage(x){
 
     var voltage;
 
@@ -243,8 +251,7 @@ function printVoltage(x) {
 
 }
 
-
-function printCurrent(x) {
+function printCurrent(x){
 
     var current;
 
@@ -256,7 +263,7 @@ function printCurrent(x) {
 
 
 // Get server IP address on LAN
-function getIPAddress() {
+function getIPAddress(){
         var interfaces = require('os').networkInterfaces();
     for (var devName in interfaces) {
         var iface = interfaces[devName];
