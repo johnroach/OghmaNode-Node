@@ -199,6 +199,7 @@
                         var cell = row.insertCell(column_index);
                         cell.innerHTML = "Conductivity (&#181;S/cm) ";
                         cell.setAttribute("data-priority", column_index+1);
+                        create_table_for_dp2("","Time(ms)","Conductivity (&#181;S/cm) ");
                         column_index=column_index+1;
                         break;
 
@@ -206,6 +207,7 @@
                         var cell = row.insertCell(column_index);
                         cell.innerHTML = "Photogate";
                         cell.setAttribute("data-priority", column_index+1);
+                        create_table_for_dp2("","Time(ms)","Gate Status ");
                         column_index=column_index+1;
                         break;
                 }
@@ -216,6 +218,7 @@
                         var cell = row.insertCell(column_index);
                         cell.innerHTML = "Temperature (&deg;C)";
                         cell.setAttribute("data-priority", column_index+1);
+                        create_table_for_dp3("","Time(ms)","Temperature (&deg;C)");
                         column_index=column_index+1;
                         break;
 
@@ -223,6 +226,7 @@
                         var cell = row.insertCell(column_index);
                         cell.innerHTML = "Pressure (mBar)";
                         cell.setAttribute("data-priority", column_index+1);
+                        create_table_for_dp3("","Time(ms)","Pressure (mBar)");
                         column_index=column_index+1;
                         break;
 
@@ -230,6 +234,7 @@
                         var cell = row.insertCell(column_index);
                         cell.innerHTML = "Voltage (V)";
                         cell.setAttribute("data-priority", column_index+1);
+                        create_table_for_dp3("","Time(ms)","Voltage (V)");
                         column_index=column_index+1;
                         break;
 
@@ -237,6 +242,7 @@
                         var cell = row.insertCell(column_index);
                         cell.innerHTML = "Current (A)";
                         cell.setAttribute("data-priority", column_index+1);
+                        create_table_for_dp3("","Time(ms)","Current (A)");
                         column_index=column_index+1;
                         break;
 
@@ -244,6 +250,7 @@
                         var cell = row.insertCell(column_index);
                         cell.innerHTML = "Conductivity (&#181;S/cm) ";
                         cell.setAttribute("data-priority", column_index+1);
+                        create_table_for_dp3("","Time(ms)","Conductivity (&#181;S/cm) ");
                         column_index=column_index+1;
                         break;
 
@@ -251,6 +258,7 @@
                         var cell = row.insertCell(column_index);
                         cell.innerHTML = "Photogate";
                         cell.setAttribute("data-priority", column_index+1);
+                        create_table_for_dp3("","Time(ms)","Gate Status ");
                         column_index=column_index+1;
                         break;
                 }
@@ -262,6 +270,7 @@
                         var cell = row.insertCell(column_index);
                         cell.innerHTML = "Photogate";
                         cell.setAttribute("data-priority", column_index+1);
+                        create_table_for_dp4("","Time(ms)","Gate Status ");
                         column_index=column_index+1;
                         break;
                 }
@@ -282,6 +291,7 @@
             var port3_sensor=all_data.data[0].P3;
             var digi_sensor=all_data.data[0].DIGI;
 
+            //add_data_to_table
             switch (port1_sensor)
             {
                 case "temp":
@@ -550,6 +560,22 @@
                 {
                     $("#sensorname1").html("Pressure Sensor");
                     $("#sensor_value1").html(last_input_from_node.pressure+ " mBar");
+                }else if (port1_sensor=="photogate")
+                {
+                    $("#sensorname1").html("Photogate");
+                    $("#sensor_value1").html(last_input_from_node.conductivity+ "(On=1 Off=0)");
+                }else if (port1_sensor=="conductivity")
+                {
+                    $("#sensorname1").html("Conductivity Sensor");
+                    $("#sensor_value1").html(last_input_from_node.conductivity+ "(&#181;S/cm)");
+                }else if (port1_sensor=="current")
+                {
+                    $("#sensorname1").html("Current Sensor");
+                    $("#sensor_value1").html(last_input_from_node.current+ " A");
+                }else if (port1_sensor=="voltage")
+                {
+                    $("#sensorname1").html("Voltage Sensor");
+                    $("#sensor_value1").html(last_input_from_node.voltage+ " V");
                 }else if (port1_sensor=="temp")
                 {
                     $("#sensorname1").html("Temperature Sensor");
@@ -570,6 +596,22 @@
                 {
                     $("#sensorname2").html("Pressure Sensor");
                     $("#sensor_value2").html(last_input_from_node.pressure+ " mBar");
+                }else if (port2_sensor=="photogate")
+                {
+                    $("#sensorname2").html("Photogate");
+                    $("#sensor_value2").html(last_input_from_node.conductivity+ "(On=1 Off=0)");
+                }else if (port2_sensor=="conductivity")
+                {
+                    $("#sensorname2").html("Conductivity Sensor");
+                    $("#sensor_value2").html(last_input_from_node.conductivity+ "(&#181;S/cm)");
+                }else if (port2_sensor=="current")
+                {
+                    $("#sensorname2").html("Current Sensor");
+                    $("#sensor_value2").html(last_input_from_node.current+ " A");
+                }else if (port2_sensor=="voltage")
+                {
+                    $("#sensorname2").html("Voltage Sensor");
+                    $("#sensor_value2").html(last_input_from_node.voltage+ " V");
                 }else if (port2_sensor=="temp")
                 {
                     $("#sensorname2").html("Temperature Sensor");
@@ -590,6 +632,22 @@
                 {
                     $("#sensorname3").html("Pressure Sensor");
                     $("#sensor_value3").html(last_input_from_node.pressure+ " mBar");
+                }else if (port3_sensor=="photogate")
+                {
+                    $("#sensorname3").html("Photogate");
+                    $("#sensor_value3").html(last_input_from_node.conductivity+ "(On=1 Off=0)");
+                }else if (port3_sensor=="conductivity")
+                {
+                    $("#sensorname3").html("Conductivity Sensor");
+                    $("#sensor_value3").html(last_input_from_node.conductivity+ "(&#181;S/cm)");
+                }else if (port3_sensor=="current")
+                {
+                    $("#sensorname3").html("Current Sensor");
+                    $("#sensor_value3").html(last_input_from_node.current+ " A");
+                }else if (port3_sensor=="voltage")
+                {
+                    $("#sensorname1").html("Voltage Sensor");
+                    $("#sensor_value1").html(last_input_from_node.voltage+ " V");
                 }else if (port3_sensor=="temp")
                 {
                     $("#sensorname3").html("Temperature Sensor");
@@ -609,7 +667,7 @@
                 if(digi_sensor=="photogate")
                 {
                     $("#diginame").html("Photogate");
-                    $("#digi_value").html(last_input_from_node.photogate+ "");
+                    $("#digi_value").html(last_input_from_node.photogate+ "(On=1 Off=0)");
                 }
 
             }else
