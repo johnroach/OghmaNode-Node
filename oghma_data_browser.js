@@ -143,7 +143,7 @@ function get_sensor_type_and_value(port_number){
 
             if(  (port1_value<=0.52) && (port1_value>=0.49) )
             {
-                formatted_result='"pressure:"'+printPressure(port1_analog_value)+'","P1":"pressure"';
+                formatted_result='"pressure":"'+printPressure(port1_analog_value)+'","P1":"pressure"';
             }else if((port1_value<=0.35) && (port1_value>=0.33))
             {
                 formatted_result='"voltage":"'+printVoltage(port1_analog_value)+'","P1":"voltage"';

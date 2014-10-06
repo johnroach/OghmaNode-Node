@@ -87,7 +87,7 @@
 
         socket.on('collected_sensor_data',function(collected_data)
         {//get data in string than turn to json data
-            console.log(collected_data);
+
             all_data = jQuery.parseJSON( collected_data );
 
             show_data_at_reading_tab(all_data.data[0]);
@@ -537,7 +537,7 @@
 
         socket.on('sensors',function(sensors)
         {//get list of sensors at stop
-            console.log(sensors);
+
             var parsed_sensor_data=jQuery.parseJSON(sensors);
             var last_input_from_node=parsed_sensor_data.data[0];
 
