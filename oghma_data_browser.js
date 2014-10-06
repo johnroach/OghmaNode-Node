@@ -8,12 +8,13 @@ b.pinMode("P9_11", b.INPUT);
 b.pinMode("P9_12", b.INPUT);
 
 //need to broadcast where I am to server so the android can pick it up
-/*var socketing = require('socket.io-client')('http://192.168.0.17:8087');
+var socketing = require('socket.io-client')('http://85.105.139.84:8001');
  socketing.on('connect', function(){
- socketing.emit('serial:ip','000-000-000-000:'+getIPAddress());
+ socketing.emit('ip',''+getIPAddress());
+ console.log("connected to remote server")
  socketing.on('event', function(){});
  socketing.on('disconnect', function(){});
- });*/
+ });
 
 
 var app = require('http').createServer(function (request, response) {
