@@ -537,7 +537,7 @@
 
         socket.on('sensors',function(sensors)
         {//get list of sensors at stop
-
+            console.log(sensors);
             var parsed_sensor_data=jQuery.parseJSON(sensors);
             var last_input_from_node=parsed_sensor_data.data[0];
 
