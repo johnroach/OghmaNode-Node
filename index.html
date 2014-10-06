@@ -87,7 +87,7 @@
 
         socket.on('collected_sensor_data',function(collected_data)
         {//get data in string than turn to json data
-
+            console.log(collected_data);
             all_data = jQuery.parseJSON( collected_data );
 
             show_data_at_reading_tab(all_data.data[0]);
