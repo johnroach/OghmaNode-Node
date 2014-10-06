@@ -70,27 +70,27 @@ var time_interval=0;
 var timer = new NanoTimer();
 var full_dataset='';
 
-io.sockets.on('connection', function (socket){
+    io.sockets.on('connection', function (socket){
 
-    socket.on('initialize',function(init_bool){
-        //need to get list of sensors after stop (i.e. before a experiment starts)
+        socket.on('initialize',function(init_bool){
+            //need to get list of sensors after stop (i.e. before a experiment starts)
 
-        if (init_bool=='true')
-        {
+            if (init_bool=='true')
+            {
 
-            current_time=0; //zero current time for next experiment
+                current_time=0; //zero current time for next experiment
 
-            var sensors_and_data='{"time":"'+current_time+ '",'+get_sensor_type_and_value("P1")
-                + ','+get_sensor_type_and_value("P2")
-                + ','+get_sensor_type_and_value("P3")
-                + ','+get_sensor_type_and_value("DIGI")
-                + '}' ;
+                var sensors_and_data='{"time":"'+current_time+ '",'+get_sensor_type_and_value("P1")
+                    + ','+get_sensor_type_and_value("P2")
+                    + ','+get_sensor_type_and_value("P3")
+                    + ','+get_sensor_type_and_value("DIGI")
+                    + '}' ;
 
-            socket.emit('sensors',('{"data":['+sensors_and_data+']}'));
-            //socket.broadcast.emit('sensors', sensors);
+                socket.emit('sensors',('{"data":['+sensors_and_data+']}'));
+                //socket.broadcast.emit('sensors', sensors);
 
-        }
-    });
+            }
+        });
 
     socket.on('start_data_collection',function(data_collection_bool,timer_interval){
         if(data_collection_bool=='true')
